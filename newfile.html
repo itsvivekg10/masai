@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+        nav a {
+            text-decoration: none;
+            padding: 8px 12px;
+            font-family: Arial, sans-serif;
+            display: inline-block;
+        }
+        
+       
+        #section1 a {
+            color: blue;
+        }
+        #section2 a {
+            color: green;
+        }
+        #section3 a {
+            color: purple;
+        }
+        
+        
+        .nav-section > a {
+            font-weight: bold;
+            border-bottom: 2px solid transparent;
+        }
+        
+        
+        .nav-section > a:hover {
+            text-decoration: underline;
+            background-color: lightgray;
+        }
+        
+        
+        .nav-section > a:active {
+            color: red;
+            background-color: yellow;
+        }
+        
+       
+        a[href^="https"] {
+            color: darkred !important;
+            font-style: italic;
+        }
+        
+       
+        nav {
+            background-color: #f8f8f8;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        </style>
+  </head>
+  <body>
+
+    <nav>
+      <section>
+        <a href="">Home</a><a href="">About us</a><a href="">Contact</a>
+      </section>
+      <section class="nav-section" id="section2">
+        <a href="https://secure.com">Secure Site</a>
+        <a href="/services">Services</a>
+        <a href="/products">Products</a>
+      </section>
+
+      <section class="nav-section" id="section3">
+        <a href="/blog">Blog</a>
+        <a href="/careers">Careers</a>
+        <a href="https://external.com">External Link</a>
+      </section>
+    </nav>
+  </body>
+</html>
