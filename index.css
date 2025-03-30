@@ -1,0 +1,9 @@
+.header {
+  color: azure;
+}
+
+.header li {
+  display: inline;
+  text-align: center;
+  margin-left: 10px;
+}
