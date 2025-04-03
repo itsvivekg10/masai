@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple UI Layout</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: black;
+    }
+
+    .container {
+      display: flex;
+      width: 80%;
+      height: 80%;
+      border: 2px solid gray;
+      padding: 20px;
+    }
+
+    /* Left Section */
+    .left-section {
+      flex: 2;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+    }
+
+    .circle-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .circle {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 2px solid gray;
+    }
+
+    /* Right Section */
+    .right-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+      padding: 10px;
+    }
+
+    .rectangle {
+      width: 80%;
+      height: 80px;
+      border: 2px solid gray;
+      border-radius: 10px;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <div class="left-section">
+        <div class="circle-grid">
+          <div class="circle"></div>
+          <div class="circle"></div>
+          <div class="circle"></div>
+          <div class="circle"></div>
+          <div class="circle"></div>
+          <div class="circle"></div>
+          <div class="circle"></div>
+          <div class="circle"></div>
+          <div class="circle"></div>
+          <div class="circle"></div>
+          <div class="circle"></div>
+          <div class="circle"></div>
+        </div>
+      </div>
+      <div class="right-section">
+        <div class="rectangle"></div>
+        <div class="rectangle"></div>
+        <div class="rectangle"></div>
+      </div>
+    </div>
+  </body>
+</html>
