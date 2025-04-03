@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flexbox Layout</title>
+  </head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+    
+
+    .container {
+        display: flex;
+        gap: 10px; 
+        background-color: #f4f4f4;
+        padding: 20px;
+        margin: 20px;
+        border-radius: 5px;
+    }
+    
+   
+    .row-layout {
+        flex-direction: row; 
+    }
+    
+   
+    .column-layout {
+        flex-direction: column; 
+        height: 200px; 
+    }
+   
+    .item {
+        background-color: #0088cc;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        font-size: 18px;
+        border-radius: 5px;
+        flex: 1; 
+    }
+    </style>
+  <body>
+    <h2>Flexbox Row Layout</h2>
+    <div class="container row-layout">
+      <div class="item">Item 1</div>
+      <div class="item">Item 2</div>
+      <div class="item">Item 3</div>
+      <div class="item">Item 4</div>
+    </div>
+
+    <h2>Flexbox Column Layout</h2>
+    <div class="container column-layout">
+      <div class="item">Item 1</div>
+      <div class="item">Item 2</div>
+      <div class="item">Item 3</div>
+      <div class="item">Item 4</div>
+    </div>
+  </body>
+</html>
