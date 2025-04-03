@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Grid UI</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <style>
+    /* Reset default styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    /* Container for both sections */
+    .container {
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+
+    /* Section Styling */
+    .section {
+      background: white;
+      padding: 20px;
+      border-radius: 5px;
+      width: 50%;
+    }
+
+    /* Title Styling */
+    .section h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    /* Grid Layout */
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    /* Individual Card */
+    .card {
+      width: calc(50% - 5px); /* Two items per row */
+      background: #fff;
+      text-align: center;
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .card img {
+      width: 100%;
+      height: auto;
+      border-radius: 5px;
+    }
+
+    /* Text below images */
+    .card p {
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    /* Explore / See All Links */
+    .link {
+      display: block;
+      margin-top: 15px;
+      color: #0088cc;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <!-- Left Section -->
+      <div class="section">
+        <h2>Revamp your home in style</h2>
+        <div class="grid">
+          <div class="card">
+            <img src="image1.jpg" alt="Cushion covers" />
+            <p>Cushion covers, bedsheets & more</p>
+          </div>
+          <div class="card">
+            <img src="image2.jpg" alt="Figurines" />
+            <p>Figurines, vases & more</p>
+          </div>
+          <div class="card">
+            <img src="image3.jpg" alt="Home storage" />
+            <p>Home storage</p>
+          </div>
+          <div class="card">
+            <img src="image4.jpg" alt="Lighting solutions" />
+            <p>Lighting solutions</p>
+          </div>
+        </div>
+        <a href="#" class="link">Explore all</a>
+      </div>
+
+      <!-- Right Section -->
+      <div class="section">
+        <h2>Starting ₹149 | Headphones</h2>
+        <div class="grid">
+          <div class="card">
+            <img src="boat.jpg" alt="boAt" />
+            <p>Starting ₹249 | boAt</p>
+          </div>
+          <div class="card">
+            <img src="boult.jpg" alt="Boult" />
+            <p>Starting ₹349 | boult</p>
+          </div>
+          <div class="card">
+            <img src="noise.jpg" alt="Noise" />
+            <p>Starting ₹649 | Noise</p>
+          </div>
+          <div class="card">
+            <img src="zebronics.jpg" alt="Zebronics" />
+            <p>Starting ₹149 | Zebronics</p>
+          </div>
+        </div>
+        <a href="#" class="link">See all offers</a>
+      </div>
+    </div>
+  </body>
+</html>
