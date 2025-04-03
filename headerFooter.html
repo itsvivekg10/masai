@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Display Property Demo</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+      }
+      .header {
+        position: sticky;
+        top: 0;
+        background-color: black;
+        color: white;
+        padding: 10px;
+        text-align: center;
+        z-index: 1000;
+      }
+      .footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background-color: black;
+        color: white;
+        text-align: center;
+        padding: 10px;
+      }
+      .content {
+        padding: 20px;
+        margin-bottom: 50px;
+      }
+      .block-element {
+        display: block;
+        width: 100%;
+        border: 2px solid black;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+      .inline-element {
+        display: inline;
+        background-color: lightblue;
+        padding: 5px;
+      }
+      .inline-block-element {
+        display: inline-block;
+        width: 150px;
+        height: 50px;
+        background-color: lightgreen;
+        text-align: center;
+        line-height: 50px;
+        margin: 5px;
+        border: 1px solid darkgreen;
+      }
+      .hidden-element {
+        display: none;
+        background-color: lightcoral;
+        padding: 10px;
+        margin-top: 10px;
+      }
+      /* CSS Toggle using checkbox */
+      #toggle:checked ~ .hidden-element {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">Sticky Header</div>
+    <div class="content">
+      <!-- Adding 10 paragraphs for scrolling -->
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+      <p>
+        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.
+      </p>
+      <p>
+        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+        officia.
+      </p>
+      <p>
+        Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse
+        quam nihil.
+      </p>
+      <p>
+        At vero eos et accusamus et iusto odio dignissimos ducimus qui
+        blanditiis.
+      </p>
+      <p>
+        Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil
+        impedit.
+      </p>
+      <p>
+        Temporibus autem quibusdam et aut officiis debitis aut rerum
+        necessitatibus saepe.
+      </p>
+      <p>
+        Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+        consequat.
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi,
+        adipisci? Nisi iusto enim laboriosam culpa delectus iste. Maxime saepe
+        repudiandae totam dolor, facere, harum id laudantium repellendus odio
+        quisquam tenetur!
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi,
+        adipisci? Nisi iusto enim laboriosam culpa delectus iste. Maxime saepe
+        repudiandae totam dolor, facere, harum id laudantium repellendus odio
+        quisquam tenetur!
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi,
+        adipisci? Nisi iusto enim laboriosam culpa delectus iste. Maxime saepe
+        repudiandae totam dolor, facere, harum id laudantium repellendus odio
+        quisquam tenetur!
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi,
+        adipisci? Nisi iusto enim laboriosam culpa delectus iste. Maxime saepe
+        repudiandae totam dolor, facere, harum id laudantium repellendus odio
+        quisquam tenetur!
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi,
+        adipisci? Nisi iusto enim laboriosam culpa delectus iste. Maxime saepe
+        repudiandae totam dolor, facere, harum id laudantium repellendus odio
+        quisquam tenetur!
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi,
+        adipisci? Nisi iusto enim laboriosam culpa delectus iste. Maxime saepe
+        repudiandae totam dolor, facere, harum id laudantium repellendus odio
+        quisquam tenetur!
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi,
+        adipisci? Nisi iusto enim laboriosam culpa delectus iste. Maxime saepe
+        repudiandae totam dolor, facere, harum id laudantium repellendus odio
+        quisquam tenetur!
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi,
+        adipisci? Nisi iusto enim laboriosam culpa delectus iste. Maxime saepe
+        repudiandae totam dolor, facere, harum id laudantium repellendus odio
+        quisquam tenetur!
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi,
+        adipisci? Nisi iusto enim laboriosam culpa delectus iste. Maxime saepe
+        repudiandae totam dolor, facere, harum id laudantium repellendus odio
+        quisquam tenetur!
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi,
+        adipisci? Nisi iusto enim laboriosam culpa delectus iste. Maxime saepe
+        repudiandae totam dolor, facere, harum id laudantium repellendus odio
+        quisquam tenetur!
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi,
+        adipisci? Nisi iusto enim laboriosam culpa delectus iste. Maxime saepe
+        repudiandae totam dolor, facere, harum id laudantium repellendus odio
+        quisquam tenetur!
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi,
+        adipisci? Nisi iusto enim laboriosam culpa delectus iste. Maxime saepe
+        repudiandae totam dolor, facere, harum id laudantium repellendus odio
+        quisquam tenetur!
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi,
+        adipisci? Nisi iusto enim laboriosam culpa delectus iste. Maxime saepe
+        repudiandae totam dolor, facere, harum id laudantium repellendus odio
+        quisquam tenetur!
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi,
+        adipisci? Nisi iusto enim laboriosam culpa delectus iste. Maxime saepe
+        repudiandae totam dolor, facere, harum id laudantium repellendus odio
+        quisquam tenetur!
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi,
+        adipisci? Nisi iusto enim laboriosam culpa delectus iste. Maxime saepe
+        repudiandae totam dolor, facere, harum id laudantium repellendus odio
+        quisquam tenetur!
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi,
+        adipisci? Nisi iusto enim laboriosam culpa delectus iste. Maxime saepe
+        repudiandae totam dolor, facere, harum id laudantium repellendus odio
+        quisquam tenetur!
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi,
+        adipisci? Nisi iusto enim laboriosam culpa delectus iste. Maxime saepe
+        repudiandae totam dolor, facere, harum id laudantium repellendus odio
+        quisquam tenetur!
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi,
+        adipisci? Nisi iusto enim laboriosam culpa delectus iste. Maxime saepe
+        repudiandae totam dolor, facere, harum id laudantium repellendus odio
+        quisquam tenetur!
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi,
+        adipisci? Nisi iusto enim laboriosam culpa delectus iste. Maxime saepe
+        repudiandae totam dolor, facere, harum id laudantium repellendus odio
+        quisquam tenetur!
+      </p>
+    </div>
+    <div class="footer">Fixed Footer</div>
+  </body>
+</html>
