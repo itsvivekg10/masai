@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Responsive Typography</title>
+    <style>
+      /* Mobile-first base styles */
+      body {
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        line-height: 1.5;
+        margin: 20px;
+        color: #333;
+        background-color: #f9f9f9;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-bottom: 1em;
+      }
+
+      /* For screens 600px and up, increase font size */
+      @media (min-width: 600px) {
+        body {
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Responsive Typography</h1>
+    <p>
+      This page adjusts font size and line height for better readability on all
+      screen sizes. Resize your browser or view on a mobile device to see it in
+      action.
+    </p>
+
+    <h2>Subheading</h2>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua.
+    </p>
+  </body>
+</html>
