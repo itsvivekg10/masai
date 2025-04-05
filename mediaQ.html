@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Responsive Columns</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background: #f4f4f4;
+      }
+
+      .container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      .column {
+        background: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        width: 100%; /* Default: single column */
+      }
+
+      /* Two-column layout for screens wider than 768px */
+      @media (min-width: 769px) and (max-width: 1024px) {
+        .column {
+          width: 48%; /* Two equal columns with gap */
+        }
+      }
+
+      /* Three-column layout for screens wider than 1024px */
+      @media (min-width: 1025px) {
+        .column {
+          width: 31.33%; /* Three columns with gap */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Responsive Column Layout</h1>
+
+    <div class="container">
+      <div class="column">
+        Column 1 content goes here. Add anything you'd like!
+      </div>
+      <div class="column">
+        Column 2 content goes here. This is flexible and responsive.
+      </div>
+      <div class="column">
+        Column 3 content goes here. Resize the screen to see layout changes.
+      </div>
+    </div>
+  </body>
+</html>
