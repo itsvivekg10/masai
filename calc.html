@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>White Calculator</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <style>body {
+    background: #f9f9f9;
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  
+  .calculator {
+    background: #ffffff;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    width: 280px;
+  }
+  
+  .calculator input {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.8em;
+    text-align: right;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #fdfdfd;
+    color: #333;
+  }
+  
+  .buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  
+  button {
+    padding: 20px;
+    font-size: 1.2em;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #333;
+  }
+  
+  button:hover {
+    background-color: #f0f0f0;
+  }
+  </style>
+  <body>
+    <div class="calculator">
+      <input type="text" placeholder="0" disabled />
+      <div class="buttons">
+        <button>C</button>
+        <button>7</button>
+        <button>8</button>
+        <button>9</button>
+        <button>/</button>
+
+        <button>4</button>
+        <button>5</button>
+        <button>6</button>
+        <button>*</button>
+
+        <button>1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>-</button>
+
+        <button>0</button>
+        <button>.</button>
+        <button>=</button>
+        <button>+</button>
+      </div>
+    </div>
+  </body>
+</html>
