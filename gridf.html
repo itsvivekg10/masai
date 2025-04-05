@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #box {
+        background-color: #a786bd;
+        height: 600px;
+        width: 800px;
+        padding-top: 50px;
+        display: flex;
+      }
+      #box > div#left {
+        width: 500px;
+        background-color: #f9431e;
+        height: 500px;
+        margin-left: 20px;
+        display: grid;
+
+        grid-template-rows: repeat(2, 50%);
+      }
+      #box > div#left > div {
+        border: 2px solid;
+      }
+      #box > div#right {
+        width: 250px;
+        background-color: #fbc6cc;
+        height: 500px;
+        margin-left: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="box">
+      <div id="left">
+        <div style="background-color: #f9431e"></div>
+        <div style="background-color: #a03d2d; display: grid; display: flex">
+          <div
+            style="border: 2px solid; width: 50%; background-color: #010dff"
+          ></div>
+          <div style="border: 2px solid; width: 50%"></div>
+        </div>
+      </div>
+      <div id="right"></div>
+    </div>
+  </body>
+</html>
