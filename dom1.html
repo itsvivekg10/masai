@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1 id="header"></h1>
+    <p>hey my name is hero</p>
+    <p>hey my name is hero</p>
+    <p>hey my name is hero</p>
+    <p>hey my name is hero</p>
+    <p>hey my name is hero</p>
+    <p>hey my name is hero</p>
+    <div class="container"></div>
+  </body>
+</html>
+<script>
+  console.log("hello world");
+  let header = document.getElementById("header");
+  header.innerText = "welcome to helloo world";
+  let para = document.getElementsByTagName("p");
+  for (let i = 0; i < para.length; i++) {
+    para[i].style.color = "red";
+  }
+  let div = document.querySelector(".container");
+  div.style.backgroundColor = "red";
+  div.style.height = "200px";
+</script>

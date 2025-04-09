@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <ul></ul>
+    <button id="add">Add Item</button>
+  </body>
+</html>
+<script>
+  let ulEle = document.getElementsByTagName("ul")[0];
+  let addButton = document.getElementById("add");
+  addButton.addEventListener("click", () => {
+    for (let i = 0; i < 1; i++) {
+  let li = document.createElement("li");
+
+      li.innerText = "rahul";
+      ulEle.append(li);
+    }
+  });
+</script>
