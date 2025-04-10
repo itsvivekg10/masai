@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h2>TODO-List</h2>
+    <input type="text" id="input-box" />
+    <button id="add">ADD TASK</button>
+
+    <ul id="main">
+      <!-- <button id="del">Delete</button
+      ><button id="com">completed</button> -->
+    </ul>
+  </body>
+</html>
+<script>
+  let textbox = document.getElementById("input-box");
+  let addButton = document.getElementById("add");
+  let main = document.getElementById("main");
+  let dele = document.getElementById("del");
+  let com = document.getElementById("comp");
+
+  addButton.addEventListener("click", () => {
+    //
+    for (let i = 0; i < 1; i++) {
+      let li = document.createElement("li");
+      let del = document.createElement("button");
+      let com = document.createElement("button");
+
+      li.innerText = textbox.value;
+      del.innerText = "DELETE";
+      com.innerText = "COMPLETE";
+
+      del.addEventListener("click", () => {
+        li.remove();
+        del.remove();
+        com.remove();
+      });
+      com.addEventListener("click", () => {
+        com.innerText = "completed";
+        li.style.backgroundColor = "yellow";
+        li.style.width = "150px";
+      });
+      main.append(li);
+      main.append(del);
+      main.append(com);
+    }
+    textbox.value = "";
+    console.log(textbox.value);
+    textbox.addEventListener("input", (e) => {
+      e.target.value;
+    });
+  });
+</script>
