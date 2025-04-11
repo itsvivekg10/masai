@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h3>TASK MANAGER</h3>
+    <input type="text" id="input" />
+    <button id="Add">ADD TASK</button>
+    <div style="display: flex; margin-left: 30px; gap: 70px">
+      <div>
+        <h1>ALL TASK</h1>
+        <ul id="all-task"></ul>
+      </div>
+      <div>
+        <h1>COMPLETED</h1>
+        <ul></ul>
+      </div>
+      <div>
+        <h1>INCOMPLETED</h1>
+        <ul></ul>
+      </div>
+    </div>
+  </body>
+</html>
+<script>
+  let add = document.getElementById("Add");
+  let input = document.getElementById("input");
+  let allTask = document.getElementById("all-Task");
+  add.addEventListener("click", () => {
+    if (input.value.trim() !== "") {
+      let li = document.createElement("li");
+      li.innerText = input.value;
+      allTask.append(li);
+      input.value = "";
+    }
+  });
+</script>

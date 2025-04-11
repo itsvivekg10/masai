@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>List Click Demo</title>
+  </head>
+  <body>
+    <div id="container">
+      <ul id="list">
+        <li id="item1">Item 1</li>
+        <li id="item2">Item 2</li>
+        <li id="item3">Item 3</li>
+      </ul>
+    </div>
+
+    <script>
+      const item2 = document.getElementById("item2");
+
+      item2.addEventListener("click", () => {
+        const parent = item2.parentNode;
+        alert("Parent text content: " + parent.textContent.trim());
+
+        const prev = item2.previousElementSibling;
+        if (prev) {
+          console.log("Previous sibling:", prev.textContent);
+        }
+
+        const next = item2.nextElementSibling;
+        if (next) {
+          console.log("Next sibling:", next.textContent);
+        }
+      });
+    </script>
+  </body>
+</html>
