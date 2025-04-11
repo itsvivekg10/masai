@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Event Propagation Demo</title>
+    <style>
+      .box {
+        padding: 40px;
+        margin: 10px;
+        border: 2px solid black;
+      }
+      #div1 {
+        background-color: #f8d7da;
+      }
+      #div2 {
+        background-color: #d1ecf1;
+      }
+      #div3 {
+        background-color: #d4edda;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="div1" class="box">
+      Div 1
+      <button id="btn1">Button 1</button>
+      <div id="div2" class="box">
+        Div 2
+        <button id="btn2">Button 2</button>
+        <div id="div3" class="box">
+          Div 3
+          <button id="btn3">Button 3 (Stop Propagation)</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function addEventListeners(id, name) {
+        const element = document.getElementById(id);
+
+        element.addEventListener(
+          "click",
+          function () {
+            alert(`${name} (capturing)`);
+          },
+          true
+        );
+
+        element.addEventListener(
+          "click",
+          function () {
+            alert(`${name} (bubbling)`);
+          },
+          false
+        );
+      }
+
+      addEventListeners("div1", "Div 1");
+      addEventListeners("div2", "Div 2");
+      addEventListeners("div3", "Div 3");
+
+      addEventListeners("btn1", "Button 1");
+      addEventListeners("btn2", "Button 2");
+
+      const btn3 = document.getElementById("btn3");
+      btn3.addEventListener(
+        "click",
+        function (e) {
+          alert("Button 3 (capturing)");
+        },
+        true
+      );
+
+      btn3.addEventListener(
+        "click",
+        function (e) {
+          alert("Button 3 (bubbling) — STOPPING PROPAGATION");
+          e.stopPropagation();
+        },
+        false
+      );
+    </script>
+  </body>
+</html>
