@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="text" id="Content" />
+    <input type="text" id="text_color" />
+    <div>
+      <h1>write Here</h1>
+      <p></p>
+    </div>
+    <button id="update">Update</button>
+  </body>
+</html>
+<script>
+  let content = document.getElementById("Content");
+  let textColor = document.getElementById("text_color");
+  let div = document.querySelector("div");
+  let updateButton = document.querySelector("#update");
+
+  updateButton.addEventListener("click", () => {
+    div.innerText = content.value;
+    div.style.color = textColor.value;
+    if (content.value !== value) {
+      alert("fill the name");
+    }
+    content.addEventListener("input", (e) => {
+      div.innerText = e.target.value;
+    });
+    textColor.addEventListener("input", (e) => {
+      div.style.color = e.target.value;
+    });
+  });
+</script>
