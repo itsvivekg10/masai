@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <header>
+      <nav
+        style="
+          width: 100%;
+          background-color: black;
+          color: white;
+          height: 50px;
+          display: flex;
+        "
+      >
+        <h3>JAYAKA</h3>
+        <div
+          style="
+            font-weight: bolder;
+            text-decoration: solid;
+            color: white;
+            text-decoration-line: none;
+            margin-left: 70%;
+            margin-top: 10px;
+          "
+        >
+          <a
+            style="
+              color: aliceblue;
+              text-decoration: none;
+              font-size: 15px;
+              /* margin-top: 10px; */
+            "
+            href="#home"
+            >HOME</a
+          >
+          <a
+            style="
+              color: aliceblue;
+              text-decoration: none;
+              font-size: 15px;
+              margin-top: 50px;
+            "
+            href="#ADD"
+            >ADD RECIEPI</a
+          >
+          <a
+            style="
+              color: aliceblue;
+              text-decoration: none;
+              font-size: 15px;
+              /* margin-top: 10px; */
+            "
+            href="#home"
+            >VIEW RECIEPI</a
+          >
+        </div>
+      </nav>
+    </header>
+    <main>
+      <div style="width: 100%; height: 100px; color: black; text-align: center">
+        <h1>LEARN AND TEACH HOW TO COOK</h1>
+      </div>
+
+      <div
+        id="ADD"
+        style="
+          width: 600px;
+          height: 400px;
+          background-color: brown;
+          align-self: center;
+        "
+      >
+        <h4>ADD YOUR OWN RECIEPIE</h4>
+        <span>Recipie Name</span>
+        <input
+          type="text"
+          required
+          placeholder="Reciepie Name"
+          id="Reciepie-input"
+        />
+        <span>ADD Ingredients</span> <textarea id="textArea1"></textarea>
+        <span>Choose Category</span>
+        <select id="Category">
+          <option value="Breakfast">Breakfast</option>
+          <option value="Lunch">Lunch</option>
+          <option value="Dinner">Dinner</option>
+        </select>
+        <span>Procedure</span> <textarea id="textArea2"></textarea>
+        <button>ADD BUTTON</button>
+      </div>
+    </main>
+    <footer></footer>
+  </body>
+</html>
+<script>
+  let ReciepieInput = document.getElementById("Reciepie-input");
+  let Ingredients = document.getElementById("textArea1");
+  let Procedure = document.getElementById("textArea2");
+  let Category = document.getElementById("Category");
+
+  let reciepie = ReciepieInput.addEventListener("input", (e) => {
+    e.target.value;
+  });
+  console.log(reciepie);
+</script>
