@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input id="inputTask" />
+    <button id="add">Add Task</button>
+    <ul></ul>
+  </body>
+</html>
+<script>
+  let inputTask = document.getElementById("inputTask");
+  let add = document.getElementById("add");
+  let ul = document.querySelector("ul");
+
+  let arr = [];
+  try {
+    arr = JSON.parse(localStorage.getItem("key")) || [];
+  } catch (e) {
+    arr = [];
+    console.error("Corrupt data in localStorage, resetting.");
+  }
+
+  console.log(arr);
+  renderData(arr); // ✅ Show existing data on page load
+
+  inputTask.addEventListener("input", (e) => {
+    // You can handle binput typing here if needed
+  });
+
+  add.addEventListener("click", () => {
+    let v = inputTask.value.trim();
+    if (v !== "") {
+      arr.push(v);
+      localStorage.setItem("key", JSON.stringify(arr)); // ✅ Save as JSON
+      renderData(arr); // ✅ Refresh list
+      inputTask.value = ""; // Clear input
+    }
+  });
+
+  // ✅ Fix this function
+  function renderData(arr) {
+    ul.innerHTML = ""; // Clear old items
+    arr.forEach((element) => {
+      let li = document.createElement("li");
+      li.textContent = element;
+      ul.appendChild(li);
+    });
+  }
+</script>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <select name="" id="theme">
+      <option value="red">red</option>
+      <option value="blue">blue</option>
+      <option value="green">green</option>
+    </select>
+  </body>
+</html>
+<script>
+  let theme = document.getElementById("theme");
+  window.addEventListener("DOMContentLoaded", () => {
+    let t = sessionStorage.getItem("key");
+    if (t) {
+      document.body.style.backgroundColor = t;
+      theme.value = t;
+    }
+  });
+  theme.addEventListener("change", (e) => {
+    let selectColor = e.target.value;
+    sessionStorage.setItem("key", selectColor);
+
+    document.body.style.backgroundColor = selectColor;
+  });
+</script>

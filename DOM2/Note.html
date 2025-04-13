@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <textarea id="textarea"></textarea>
+    <button id="save">Save</button>
+    <div id="note"></div>
+  </body>
+</html>
+<script>
+  let textarea = document.getElementById("textarea");
+  let save = document.getElementById("save");
+  let note = document.getElementById("note");
+  let arr = JSON.parse(localStorage.getItem("note")) || [];
+  renderData(arr);
+  save.addEventListener("click", () => {
+    arr.push(textarea.value);
+    localStorage.setItem("note", JSON.stringify(arr));
+    renderData(arr);
+    textarea.value = "";
+    
+  });
+  function renderData(data) {
+    note.innerHTML = ""; 
+    data.forEach((item, index) => {
+      note.innerHTML += `<p>${index + 1}. ${item}</p>`;
+    });
+  }
+</script>
