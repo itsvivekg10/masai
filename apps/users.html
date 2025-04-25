@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form Design</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f5f7fa;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        height: 100vh;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .form-container {
+        background-color: #fff;
+        padding: 30px 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+      }
+
+      .form-container h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 6px;
+        color: #555;
+        font-weight: 500;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 16px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        background-color: #0088cc;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #0074b8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="form-container">
+      <h2>Register</h2>
+      <label for="name">Name</label>
+      <input type="text" id="name" placeholder="Enter your name" />
+
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="Enter your email" required />
+
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        placeholder="Enter password"
+        required
+      />
+
+      <button id="Submit">Submit</button>
+      <div id="userList"></div>
+    </div>
+  </body>
+</html>
+<script>
+  let name = document.getElementById("name").value;
+  let email = document.getElementById("email").value;
+  let password = document.getElementById("password").value;
+  let submit = document.getElementById("submit");
+  let userList = document.getElementById("userList");
+  async function fetchUser() {
+    userList.innerHTML = "";
+    try {
+      let response = await fetch("https://mockapi.io/users");
+      let data = await response.json();
+      data.array.forEach((element) => {
+        const li = document.createElement("li");
+        li.textContent = `&{element.name} Email : ${element.email}`;
+        userList.appendChild(li);
+      });
+    } catch (error) {}
+  }
+  submit.addEventListener("clcik", () => {
+    fetch("https://mockapi.io/users", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        name: name,
+        email: email,
+        password: password,
+      }),
+    });
+  });
+</script>
