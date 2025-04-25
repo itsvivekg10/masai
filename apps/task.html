@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>TASK MANAGER</h1>
+    <input id="input" /><button id="add">ADD</button>
+    <ul id="taskList">
+      <button id="delet">delete</button
+      ><button id="edit">Edit</button>
+    </ul>
+  </body>
+</html>
+<script>
+  let input = document.getElementById("input");
+  let add = document.getElementById("add");
+  let delet = document.getElementById("delete");
+  let edit = document.getElementById("edit");
+  let taskList = document.getElementById("taskList");
+  input.addEventListener("input", (e) => {
+    e.target.value;
+  });
+  async function dataFetch() {
+    taskList.innerHTML = "";
+    try {
+      let res = await fetch("https://mockapi.io/tasks");
+      let datas = await res.json();
+      datas.forEach((data) => {
+        let li = document.createElement("li");
+        li.innerText = `${data.task}`;
+        taskList.appendChild(li);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  edit.addEventListener("click", () => {
+    let task = input.value;
+    fetch("https://mockapi.io/tasks", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        task: task,
+      }),
+    });
+  });
+
+  add.addEventListener("click", () => {
+    let task = input.value;
+    fetch("https://mockapi.io/tasks", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        task: task,
+      }),
+    });
+  });
+</script>
