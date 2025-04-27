@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple HTML Page</title>
+</head>
+<body>
+
+  <h1>USERS</h1>
+<div id="user"></div>
+<div id="pagignation"></div>
+</body>
+</html>
+<script>
+    let user = document.getElementById("user")
+    let pagignation = document.getElementById("pagignation")
+    let currentPage 
+    console.log("hello world")
+    
+    async function fetchData (limit){
+        try{
+            let res = await fetch("https://jsonplaceholder.typicode.com/users?_limit=6")
+            let datas = await res.json()
+            renderData(datas)
+        console.log(datas)
+        }catch(err){
+            console.log(err)
+        }
+    }
+function renderData(datas){
+    user.innerHTML=""
+    
+    datas.forEach((data)=>{
+        let div = document.createElement("div")
+div.innerHTML=`<div style={width:"50%"; border:"1px";height:"30px";background-color:"red"}><h4>${data.name}</h4> <h5>${data.userName}</h5><h5>${data.email}</h5></div>`
+user.appendChild(div)
+    })
+   
+}
+
+
+    function createPaginantion(){
+        for(let i=0;i<=1;i++){
+let btn = document.createElement("button")
+btn.textContent=i
+btn.addEventListener("click",()=>{
+currentPage=i
+fetchData(currentPage)
+})
+pagignation.appendChild(btn)
+        }
+    }
+    fetchData()
+    createPaginantion()
+    </script>
