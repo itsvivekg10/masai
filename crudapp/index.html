@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Library Management</title>
+</head>
+<body>
+  <h1>Library Management System</h1>
+
+  <h2>Add a Book</h2>
+  <input id="title" placeholder="Enter Book Name">
+  <input id="author" placeholder="Enter Author Name">
+  <input id="genre" placeholder="Enter Genre Name">
+  <input id="year" placeholder="Enter Publish Year" type="number">
+  <select id="availability">
+    <option value="true">Available</option>
+    <option value="false">Not Available</option>
+  </select>
+  <button id="submitBook">Submit Book</button>
+
+  <h2>Add a Member</h2>
+  <input id="name" placeholder="Enter Member Name">
+  <input id="membershipDate" placeholder="Enter Join Date (YYYY-MM-DD)" type="date">
+  <select id="activeStatus">
+    <option value="true">Active</option>
+    <option value="false">Inactive</option>
+  </select>
+  <button id="submitMember">Submit Member</button>
+  <h3> search Books</h3>
+  <input type="text" id="book search">
+</body>
+</html>
+  <script>
+    console.log("Library Management System loaded!");
+
+    const submitBook = document.getElementById("submitBook");
+    const submitMember = document.getElementById("submitMember");
+
+    submitBook.addEventListener("click", async () => {
+      let title = document.getElementById("title").value;
+      let author = document.getElementById("author").value;
+      let genre = document.getElementById("genre").value;
+      let year = Number(document.getElementById("year").value);
+      let availability = document.getElementById("availability").value === "true";
+
+      let res = await fetch("https://books-b0ace-default-rtdb.asia-southeast1.firebasedatabase.app/books.json", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json"
+        },
+        body: JSON.stringify({
+          title,
+          author,
+          genre,
+          publishedYear: year,
+          available: availability
+        })
+        title.value=""
+        author.value=""
+        genre.value=""
+        year.value=""
+
+      });
+
+      let data = await res.json();
+      console.log("Book added:", data);
+    });
+
+    submitMember.addEventListener("click", async () => {
+      let name = document.getElementById("name").value;
+      let membershipDate = document.getElementById("membershipDate").value;
+      let active = document.getElementById("activeStatus").value === "true";
+
+      let res = await fetch("https://books-b0ace-default-rtdb.asia-southeast1.firebasedatabase.app/members.json", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json"
+        },
+        body: JSON.stringify({
+          name,
+          membershipDate,
+          active
+        })
+      });
+
+      let data = await res.json();
+      console.log("Member added:", data);
+    });
+
+  </script>
+
