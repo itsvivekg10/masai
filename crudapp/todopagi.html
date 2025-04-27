@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  
+</head>
+<body>
+<div id="todo-container">
+</div>
+  <div id="pagignation-buttons"></div>
+ 
+</body>
+</html>
+<script>
+let todoContainer = document.getElementById("todo-container")
+let pagignationButtons=document.getElementById("pagignation-buttons")
+let todoPerPage=10
+let totalTodos = 200
+let totalPages= Math.ceil(totalTodos/todoPerPage)
+    console.log("hello world")
+async function fetchData(page){
+    try{
+        let res = await fetch(`https://jsonplaceholder.typicode.com/todos?_limit=${todoPerPage}&_page=${page}`)
+        let datas = await res.json()
+        console.log(datas)
+        renderTodos(datas)
+    }catch(err){
+console.log(err)
+    }
+}
+
+function renderTodos(datas){
+todoContainer.innerHTML=""
+datas.forEach((data)=>{
+    const div = document.createElement('div');
+    div.textContent = `${data.id}. ${data.title}`;
+    todoContainer.appendChild(div);
+
+});
+}
+function createPaginantion (){
+for(let i=0;i<totalPages;i++){
+    const btn = document.createElement("button")
+    btn.textContent=i
+    btn.addEventListener("click",()=>{
+        fetchData(i)
+    })
+    pagignationButtons.appendChild(btn)
+}
+}
+createPaginantion()
+fetchData()
+</script>
