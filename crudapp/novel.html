@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <!-- Link to external CSS or include styles here -->
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+</head>
+
+<body>
+    <!-- Your content goes here -->
+     <input id="search" type="text" placeholder ="search here">
+     <button id="searchButton">SEARCH</button>
+
+    <!-- Include your scripts here -->
+   <div  id="data">
+    
+   </div>
+</body>
+
+</html>
+<script>
+    console.log("hello world")
+let searchInput= document.getElementById("search")
+let searchButton = document.getElementById("searchButton")
+let datadiv = document.getElementById("data")
+    async function fetchData() {
+  try {
+    let res = await fetch("https://novel-1ade1-default-rtdb.asia-southeast1.firebasedatabase.app/novel.json");
+    let data = await res.json();
+    console.log("Data fetched:", data);
+    searchButton.addEventListener("click",()=>{
+        let query = searchInput.value.toLowerCase()
+datadiv.innerHTML=""
+for(let key in data ){
+    let novel =data[key]
+    if(novel.title.toLowerCase().includes(query)||novel.author.toLowerCase().includes(query)){
+        datadiv.innerHTML=`
+         <h3>${novel.title}</h3>
+              <p>Author: ${novel.author}</p>
+              <p>Price: ${novel.price}</p>
+              <p>Release Year: ${novel.releaseYear}</p>
+              <p>Genre: ${novel.genre}</p>
+              <hr/>
+        
+        
+        `
+    }
+}
+    })
+
+  } catch (err) {
+    console.log("Error fetching data:", err);
+  }
+}
+
+
+fetchData();
+
+
+    </script>
