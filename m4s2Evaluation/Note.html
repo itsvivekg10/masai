@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div
+      id="header"
+      style="
+        height: 50px;
+        background-color: black;
+        color: aliceblue;
+        display: inline-flex;
+        width: 100%;
+      "
+    >
+      <div><h4>NoteMAKING</h4></div>
+      <div
+        style="
+          margin-left: 60%;
+          display: inline-flex;
+          column-gap: 20px;
+          font-size: 1rem;
+          margin-top: 15px;
+        "
+      >
+        <a
+          style="cursor: pointer; text-decoration: none; color: aliceblue"
+          href="index.html"
+          >Home</a
+        >
+        <a
+          style="cursor: pointer; text-decoration: none; color: aliceblue"
+          href="page1.html"
+          >CreateNotes</a
+        >
+        <a
+          style="cursor: pointer; text-decoration: none; color: aliceblue"
+          href="Note.html"
+          >View-Notes</a
+        >
+        <a
+          style="cursor: pointer; text-decoration: none; color: aliceblue"
+          href=""
+          >Settings</a
+        >
+      </div>
+    </div>
+    <div id="main"></div>
+  </body>
+</html>
+<script>
+  console.log("hello word for note page");
+  async function fetchData() {
+    try {
+      let res = await fetch(
+        "https://notes-26a54-default-rtdb.asia-southeast1.firebasedatabase.app/notes.json"
+      );
+      let datas = await res.json();
+      rederData(datas);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  function rederData(datas) {
+    let main = document.getElementById("main");
+    main.innerHTML = "";
+    datas = Object.entries(datas);
+    console.log(datas);
+    datas.forEach((data) => {
+      data.forEach((dat) => {
+        let bod = document.createElement("div");
+        bod.innerHTML = `<h2>${dat.title}</h2><p>${dat.text}</p><img src=${dat.imgUpload}>`;
+        main.appendChild(bod);
+      });
+    });
+  }
+
+  fetchData();
+</script>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div
+      id="header"
+      style="
+        height: 50px;
+        background-color: black;
+        color: aliceblue;
+        display: inline-flex;
+        width: 100%;
+      "
+    >
+      <div><h4>NoteMAKING</h4></div>
+      <div
+        style="
+          margin-left: 60%;
+          display: inline-flex;
+          column-gap: 20px;
+          font-size: 1rem;
+          margin-top: 15px;
+        "
+      >
+        <a
+          style="cursor: pointer; text-decoration: none; color: aliceblue"
+          href="index.html"
+          >Home</a
+        >
+        <a
+          style="cursor: pointer; text-decoration: none; color: aliceblue"
+          href="page1.html"
+          >CreateNotes</a
+        >
+        <a
+          style="cursor: pointer; text-decoration: none; color: aliceblue"
+          href="Note.html"
+          >View-Notes</a
+        >
+        <a
+          style="cursor: pointer; text-decoration: none; color: aliceblue"
+          href=""
+          >Settings</a
+        >
+      </div>
+    </div>
+    <di>
+      <h1>CREATE YOUR NOTE</h1>
+      <label>TITLE :</label><input id="title" />
+    <label>CONTENT :</label><textarea id="text"> </textarea>
+    
+        <label>IMAGE URL :</label><input id="imgUpload" placeholder="paste the Image url" />
+      
+      <button id="saveBtn" onclick="addData()">SAVE</button>
+     <p id="note"></p>
+    </div>
+  </body>
+</html>
+<script>
+ 
+
+let note= document.getElementById("note")
+   
+    async function addData() {
+        
+        let notes = {
+        title:document.getElementById("title").value,
+      text: document.getElementById("text").value,
+      imgUpload: document.getElementById("imgUpload").value,
+    };
+      try{
+        let res = await fetch(
+        "https://notes-26a54-default-rtdb.asia-southeast1.firebasedatabase.app/notes.json",
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(notes),
+        }
+      );
+      let data = await res.json();
+      console.log("this is data",data);
+      if(res.ok){
+note.innerText="data added succsessfully"
+      }
+      }catch(err){
+console.log(err)
+      }
+    }
+    ;
+
+</script>
