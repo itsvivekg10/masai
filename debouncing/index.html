@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input id="search" type="text" />
+    <h4>search Result</h4>
+    <div id="resultsBox"></div>
+  </body>
+</html>
+<script>
+  let inputSearch = document.getElementById("search");
+  let timer;
+  inputSearch.addEventListener("input", (e) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      searchQuery(e.target.value);
+    }, 500);
+  });
+  function searchQuery(query) {
+    fetchData(query);
+  }
+  async function fetchData(query) {
+    try {
+      let res = await fetch(
+        `https://www.omdbapi.com/?apikey=71ed8488&s=${query}`
+      );
+      let data = await res.json();
+      displayData(data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  function displayData(data) {
+    // let datas = Object.entries(data);
+    let datas = data.Search;
+    console.log(datas);
+    let resultsBox = document.getElementById("resultsBox");
+    resultsBox.innerHTML = "";
+    datas.forEach((ele) => {
+      let div = document.createElement("div");
+      div.innerHTML = `<h5>${ele.Title}</h5> <img src=${ele.Poster}/>`;
+      resultsBox.appendChild(div);
+    });
+  }
+</script>

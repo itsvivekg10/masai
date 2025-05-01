@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button id="btn">Show Image</button>
+    <div id="showData"></div>
+  </body>
+</html>
+<script>
+  let btn = document.getElementById("btn");
+
+  let flag = true;
+  btn.addEventListener("click", buyButton);
+  let render = document.getElementById("showData");
+
+  function buyButton() {
+    if (flag) {
+      fetchData();
+      flag = false;
+      setTimeout(() => {
+        flag = true;
+      }, 500);
+    } else {
+      render.innerHTML = "";
+      let h5 = document.createElement("h5");
+      h5.innerText = "chill bro data is loading";
+      render.appendChild(h5);
+    }
+  }
+  function fetchData() {
+    render.innerHTML = "";
+
+    let img = document.createElement("img");
+    img.src = "https://picsum.photos/600/400?random=" + Math.random();
+    render.appendChild(img);
+  }
+</script>
