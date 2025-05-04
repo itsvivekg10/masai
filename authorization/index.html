@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Authorization</title>
+  </head>
+  <body>
+    <div>
+      <h1>Sign-Up</h1>
+      <input type="email" id="signup-email" placeholder="Email" />
+      <input type="password" id="signup-pass" placeholder="Password" />
+      <select id="role">
+        <option value="User">User</option>
+        <option value="Admin">Admin</option>
+      </select>
+      <button id="Sign-Up">SignUp</button>
+    </div>
+
+    <div>
+      <h1>Login</h1>
+      <input type="email" id="login-email" placeholder="Email" />
+      <input type="password" id="login-pass" placeholder="Password" />
+      <button id="login">Login</button>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+      import {
+        getAuth,
+        createUserWithEmailAndPassword,
+        signInWithEmailAndPassword,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+      import {
+        getFirestore,
+        setDoc,
+        doc,
+        getDoc,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyA6-odywmAe2TqoGfTU_HPoAasRYrSJjKA",
+        authDomain: "authorization-f3f90.firebaseapp.com",
+        projectId: "authorization-f3f90",
+        storageBucket: "authorization-f3f90.appspot.com",
+        messagingSenderId: "728881251406",
+        appId: "1:728881251406:web:494ae6c028d9ab82d86f1f",
+        measurementId: "G-6T98NGKVEJ",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      // SignUp Handler
+      document.getElementById("Sign-Up").addEventListener("click", async () => {
+        let email = document.getElementById("signup-email").value;
+        let pass = document.getElementById("signup-pass").value;
+        let role = document.getElementById("role").value;
+
+        try {
+          const userCredential = await createUserWithEmailAndPassword(
+            auth,
+            email,
+            pass
+          );
+          const user = userCredential.user;
+          await setDoc(doc(db, "users", user.uid), {
+            email: user.email,
+            role: role,
+          });
+        } catch (error) {
+          console.error("Signup Error:", error.message);
+          alert(error.message);
+        }
+      });
+    </script>
+  </body>
+</html>
