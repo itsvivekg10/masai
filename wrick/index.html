@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rick and Morty Encyclopedia</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/@tailwindcss/browser@latest"></script>
+    <style>
+      /* Custom styles for the Rick and Morty theme */
+      body {
+        background-color: #1e1e1e; /* Dark background */
+        color: #f5f5f5; /* Light text */
+        font-family: "Inter", sans-serif;
+      }
+      .rm-container {
+        max-width: 1200px; /* Increased max-width for larger screens */
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      .rm-header {
+        display: flex;
+        justify-content: center; /* Center the logo */
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+      .rm-logo {
+        width: auto; /* Maintain aspect ratio */
+        height: 100px; /* Increased logo size */
+      }
+      .rm-card-grid {
+        display: grid;
+        grid-template-columns: repeat(
+          auto-fit,
+          minmax(250px, 1fr)
+        ); /* Responsive grid, minimum width 250px */
+        gap: 1.5rem; /* Increased gap */
+        margin-bottom: 2rem;
+      }
+      .rm-card {
+        background-color: #3c3e44; /* Dark card background */
+        border-radius: 0.5rem; /* Rounded corners */
+        padding: 1rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2); /* Shadow for depth */
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Smooth transition */
+        cursor: pointer; /* Indicate clickable */
+      }
+      .rm-card:hover {
+        transform: translateY(-0.5rem); /* Slight lift on hover */
+        box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.3); /* Increased shadow on hover */
+      }
+      .rm-card-image-container {
+        display: flex;
+        justify-content: center; /* Center image */
+        margin-bottom: 1rem;
+      }
+      .rm-card-image {
+        max-width: 100%; /* Ensure image doesn't overflow */
+        height: auto; /* Maintain aspect ratio */
+        border-radius: 0.25rem; /* Rounded corners for image */
+      }
+      .rm-card-content {
+        text-align: center;
+      }
+      .rm-card-title {
+        font-size: 1.25rem; /* Increased font size */
+        font-weight: 600; /* Semi-bold font */
+        margin-bottom: 0.5rem;
+        color: #f5f5f5;
+      }
+      .rm-card-info {
+        font-size: 1rem;
+        color: #e0e0e0;
+        margin-bottom: 0.25rem;
+      }
+      .rm-status {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-size: 1rem;
+        margin-top: 0.5rem;
+      }
+      .rm-status-icon {
+        width: 0.75rem;
+        height: 0.75rem;
+        border-radius: 50%;
+      }
+      .rm-status-alive {
+        background-color: #55cc44; /* Green for Alive */
+      }
+      .rm-status-dead {
+        background-color: #ff4444; /* Red for Dead */
+      }
+      .rm-status-unknown {
+        background-color: #aaaaaa; /* Gray for Unknown */
+      }
+      .rm-pagination {
+        display: flex;
+        justify-content: center; /* Center buttons */
+        margin-bottom: 2rem;
+      }
+      .rm-button {
+        padding: 0.75rem 1.5rem; /* Increased padding */
+        font-size: 1.1rem; /* Increased font size */
+        background-color: #00b8d4; /* Teal button */
+        color: #f5f5f5;
+        border: none;
+        border-radius: 0.5rem; /* Rounded corners */
+        cursor: pointer;
+        transition: background-color 0.2s ease-in-out,
+          box-shadow 0.2s ease-in-out; /* Smooth transition */
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); /* Add shadow */
+      }
+      .rm-button:hover {
+        background-color: #00869e; /* Darker teal on hover */
+        box-shadow: 0 0.5rem 0.75rem rgba(0, 0, 0, 0.2); /* Increase shadow on hover */
+      }
+      .rm-button:disabled {
+        background-color: #808080; /* Gray for disabled */
+        cursor: not-allowed;
+        box-shadow: none; /* Remove shadow for disabled */
+      }
+      .rm-footer {
+        text-align: center;
+        font-size: 1rem;
+        color: #e0e0e0;
+        padding-top: 1rem;
+        border-top: 1px solid #4a5568; /* Lighter border */
+      }
+      /* Styles for the character detail page */
+      .detail-container {
+        max-width: 800px; /* Increased max-width for detail page */
+        margin: 0 auto;
+        padding: 2rem;
+        background-color: #3c3e44;
+        border-radius: 0.5rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+      }
+      .detail-header {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 2rem;
+      }
+      .detail-title {
+        font-size: 2.25rem; /* Increased font size */
+        font-weight: 700; /* Bold font */
+        margin-bottom: 1rem;
+        color: #f5f5f5;
+        text-align: center;
+      }
+      .detail-image-container {
+        display: flex;
+        justify-content: center; /* Center image */
+        margin-bottom: 1rem;
+      }
+      .detail-image {
+        max-width: 100%; /* Ensure image doesn't overflow */
+        height: auto;
+        border-radius: 0.25rem;
+      }
+      .detail-info {
+        font-size: 1.1rem; /* Increased font size */
+        color: #e0e0e0;
+        margin-bottom: 0.75rem; /* Increased margin */
+      }
+      .detail-info-label {
+        font-weight: 600; /* Semi-bold for labels */
+        color: #00b8d4;
+      }
+      .detail-episodes {
+        font-size: 1rem;
+        color: #e0e0e0;
+        margin-bottom: 0.75rem;
+      }
+      .detail-episodes-label {
+        font-weight: 600;
+        color: #00b8d4;
+        margin-right: 0.25rem;
+      }
+
+      /* Dark theme toggle styles */
+      .theme-switch-wrapper {
+        display: flex;
+        align-items: center;
+        margin-left: auto; /* Push to the right */
+      }
+      .theme-switch-label {
+        font-size: 1rem;
+        color: #e0e0e0;
+        margin-right: 0.5rem;
+      }
+      .theme-switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+      }
+      .theme-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: 0.4s;
+        transition: 0.4s;
+        border-radius: 34px;
+      }
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: 0.4s;
+        transition: 0.4s;
+        border-radius: 50%;
+      }
+      input:checked + .slider {
+        background-color: #00b8d4;
+      }
+      input:focus + .slider {
+        box-shadow: 0 0 1px #00b8d4;
+      }
+      input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+      }
+
+      /* Random character button */
+      .random-character-button {
+        margin-top: 2rem;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-800 text-gray-100">
+    <div id="root">
+      <div class="rm-container">
+        <header class="rm-header">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/en/c/c8/Rick_and_Morty_logo.svg"
+            alt="Rick and Morty Logo"
+            class="rm-logo"
+          />
+        </header>
+        <div id="character-details" class="hidden">
+          <div class="detail-container">
+            <h1 id="detail-title" class="detail-title">Character Name</h1>
+            <div class="detail-image-container">
+              <img
+                id="detail-image"
+                src=""
+                alt="Character Image"
+                class="detail-image"
+              />
+            </div>
+            <p id="detail-status" class="detail-info">
+              <span class="detail-info-label">Status:</span>
+            </p>
+            <p id="detail-species" class="detail-info">
+              <span class="detail-info-label">Species:</span>
+            </p>
+            <p id="detail-type" class="detail-info">
+              <span class="detail-info-label">Type:</span>
+            </p>
+            <p id="detail-gender" class="detail-info">
+              <span class="detail-info-label">Gender:</span>
+            </p>
+            <p id="detail-origin" class="detail-info">
+              <span class="detail-info-label">Origin:</span>
+            </p>
+            <p id="detail-location" class="detail-info">
+              <span class="detail-info-label">Current Location:</span>
+            </p>
+            <p id="detail-episodes" class="detail-episodes">
+              <span class="detail-episodes-label">Episode Appearances:</span>
+              <span id="detail-episode-names"></span>
+            </p>
+            <div class="random-character-button">
+              <button id="random-character-btn" class="rm-button">
+                Random Character
+              </button>
+            </div>
+            <footer class="rm-footer" id="detail-footer-clock"></footer>
+          </div>
+        </div>
+        <div id="character-gallery">
+          <div class="rm-card-grid" id="character-cards"></div>
+          <nav class="rm-pagination">
+            <button id="prev-button" class="rm-button" disabled>
+              Previous
+            </button>
+            <button id="next-button" class="rm-button">Next</button>
+          </nav>
+          <div class="random-character-button">
+            <button id="random-character-btn-gallery" class="rm-button">
+              Random Character
+            </button>
+          </div>
+          <footer class="rm-footer" id="gallery-footer-clock"></footer>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const galleryContainer = document.getElementById("character-gallery");
+      const detailContainer = document.getElementById("character-details");
+      const rootContainer = document.getElementById("root");
+
+      let currentPage = 1;
+      let isGalleryVisible = true;
+
+      const prevButton = document.getElementById("prev-button");
+      const nextButton = document.getElementById("next-button");
+      const characterCardsContainer =
+        document.getElementById("character-cards");
+      const galleryFooterClock = document.getElementById(
+        "gallery-footer-clock"
+      );
+      const detailFooterClock = document.getElementById("detail-footer-clock");
+      const randomCharacterButtonGallery = document.getElementById(
+        "random-character-btn-gallery"
+      );
+      const randomCharacterButtonDetails = document.getElementById(
+        "random-character-btn"
+      );
+
+      // Character detail page elements
+      const detailTitleElement = document.getElementById("detail-title");
+      const detailImageElement = document.getElementById("detail-image");
+      const detailStatusElement = document.getElementById("detail-status");
+      const detailSpeciesElement = document.getElementById("detail-species");
+      const detailTypeElement = document.getElementById("detail-type");
+      const detailGenderElement = document.getElementById("detail-gender");
+      const detailOriginElement = document.getElementById("detail-origin");
+      const detailLocationElement = document.getElementById("detail-location");
+      const detailEpisodesElement = document.getElementById("detail-episodes");
+      const detailEpisodeNamesElement = document.getElementById(
+        "detail-episode-names"
+      );
+
+      // Function to fetch and display characters
+      async function fetchCharacters(page) {
+        try {
+          const response = await fetch(
+            `https://rickandmortyapi.com/api/character?page=${page}`
+          );
+          const data = await response.json();
+
+          if (data.results) {
+            characterCardsContainer.innerHTML = ""; // Clear previous cards
+            data.results.forEach((character) => {
+              const card = createCharacterCard(character);
+              characterCardsContainer.appendChild(card);
+            });
+
+            // Update pagination buttons
+            prevButton.disabled = page === 1;
+            nextButton.disabled = page >= data.info.pages;
+          }
+        } catch (error) {
+          console.error("Error fetching characters:", error);
+          characterCardsContainer.innerHTML = `<p class="text-red-500 text-center">Failed to load characters. Please try again later.</p>`;
+        }
+      }
+
+      // Function to create a character card
+      function createCharacterCard(character) {
+        const card = document.createElement("div");
+        card.classList.add("rm-card");
+        card.dataset.characterId = character.id;
+
+        const imageContainer = document.createElement("div");
+        imageContainer.classList.add("rm-card-image-container");
+
+        const image = document.createElement("img");
+        image.src = character.image;
+        image.alt = character.name;
+        image.classList.add("rm-card-image");
+
+        imageContainer.appendChild(image);
+
+        const content = document.createElement("div");
+        content.classList.add("rm-card-content");
+
+        const title = document.createElement("h2");
+        title.textContent = character.name;
+        title.classList.add("rm-card-title");
+
+        const species = document.createElement("p");
+        species.textContent = `Species: ${character.species}`;
+        species.classList.add("rm-card-info");
+
+        const status = document.createElement("p");
+        status.classList.add("rm-card-info", "rm-status");
+        status.textContent = "Status: ";
+
+        const statusIcon = document.createElement("span");
+        statusIcon.classList.add("rm-status-icon");
+        if (character.status === "Alive") {
+          statusIcon.classList.add("rm-status-alive");
+        } else if (character.status === "Dead") {
+          statusIcon.classList.add("rm-status-dead");
+        } else {
+          statusIcon.classList.add("rm-status-unknown");
+        }
+
+        const statusText = document.createElement("span");
+        statusText.textContent = character.status;
+
+        status.appendChild(statusIcon);
+        status.appendChild(statusText);
+
+        content.appendChild(title);
+        content.appendChild(species);
+        content.appendChild(status);
+
+        card.appendChild(imageContainer);
+        card.appendChild(content);
+
+        card.addEventListener("click", () => {
+          showCharacterDetails(character.id);
+        });
+
+        return card;
+      }
+
+      // Function to fetch and display character details
+      async function fetchCharacterDetails(id) {
+        try {
+          const response = await fetch(
+            `https://rickandmortyapi.com/api/character/${id}`
+          );
+          const data = await response.json();
+
+          populateCharacterDetails(data);
+        } catch (error) {
+          console.error("Error fetching character details:", error);
+          alert("Failed to load character details. Please try again.");
+        }
+      }
+
+      // Function to populate character details on the page
+      function populateCharacterDetails(character) {
+        detailTitleElement.textContent = character.name;
+        detailImageElement.src = character.image;
+        detailImageElement.alt = character.name;
+        detailStatusElement.textContent = `Status: ${character.status}`;
+        detailSpeciesElement.textContent = `Species: ${character.species}`;
+        detailTypeElement.textContent = `Type: ${character.type || "N/A"}`;
+        detailGenderElement.textContent = `Gender: ${character.gender}`;
+        detailOriginElement.textContent = `Origin: ${character.origin.name}`;
+        detailLocationElement.textContent = `Current Location: ${character.location.name}`;
+
+        // Fetch episode names
+        const episodeNames = character.episode.map((episodeUrl) => {
+          const episodeId = episodeUrl.split("/").pop();
+          return fetch(`https://rickandmortyapi.com/api/episode/${episodeId}`)
+            .then((response) => response.json())
+            .then((episode) => episode.name)
+            .catch((error) => {
+              console.error("Error fetching episode name:", error);
+              return "Unknown Episode";
+            });
+        });
+
+        Promise.all(episodeNames).then((names) => {
+          detailEpisodeNamesElement.textContent = names.join(", ");
+        });
+
+        showDetailsPage();
+      }
+
+      // Function to show character details page
+      function showDetailsPage() {
+        galleryContainer.classList.add("hidden");
+        detailContainer.classList.remove("hidden");
+        isGalleryVisible = false;
+      }
+
+      // Function to show character gallery page
+      function showGalleryPage() {
+        galleryContainer.classList.remove("hidden");
+        detailContainer.classList.add("hidden");
+        isGalleryVisible = true;
+        fetchCharacters(currentPage); // Reload the current page
+      }
+
+      // Event listeners for pagination buttons
+      prevButton.addEventListener("click", () => {
+        if (currentPage > 1) {
+          currentPage--;
+          fetchCharacters(currentPage);
+        }
+      });
+
+      nextButton.addEventListener("click", () => {
+        currentPage++;
+        fetchCharacters(currentPage);
+      });
+
+      // Event listener for character card clicks
+      characterCardsContainer.addEventListener("click", (event) => {
+        const card = event.target.closest(".rm-card");
+        if (card) {
+          const characterId = card.dataset.characterId;
+          showCharacterDetails(characterId);
+        }
+      });
+
+      // Event listener for random character button on gallery
+      randomCharacterButtonGallery.addEventListener("click", () => {
+        fetchRandomCharacter();
+      });
+
+      // Event listener for random character button on details page
+      randomCharacterButtonDetails.addEventListener("click", () => {
+        fetchRandomCharacter();
+      });
+
+      // Function to fetch a random character
+      async function fetchRandomCharacter() {
+        try {
+          const response = await fetch(
+            "https://rickandmortyapi.com/api/character"
+          );
+          const data = await response.json();
+          const randomId = Math.floor(Math.random() * data.info.count) + 1; // Ensure ID is within the valid range.
+          fetchCharacterDetails(randomId);
+        } catch (error) {
+          console.error("Error fetching random character:", error);
+          alert("Failed to load a random character. Please try again.");
+        }
+      }
+
+      // Initial fetch of characters
+      fetchCharacters(1);
+
+      // Function to update the footer clock
+      function updateFooterClock() {
+        const now = new Date();
+        const days = [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ];
+        const months = [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ];
+
+        const dayName = days[now.getDay()];
+        const day = now.getDate();
+        const monthName = months[now.getMonth()];
+        const year = now.getFullYear();
+        const hours = String(now.getHours()).padStart(2, "0");
+        const minutes = String(now.getMinutes()).padStart(2, "0");
+        const seconds = String(now.getSeconds()).padStart(2, "0");
+
+        const timeString = `${hours}:${minutes}:${seconds} ${dayName} ${monthName} ${day}, ${year}`;
+        galleryFooterClock.textContent = timeString;
+        detailFooterClock.textContent = timeString;
+      }
+
+      // Update the clock every second
+      setInterval(updateFooterClock, 1000);
+      updateFooterClock(); // Initial update
+    </script>
+  </body>
+</html>
