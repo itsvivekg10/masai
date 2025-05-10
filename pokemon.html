@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pokémon Explorer</title>
+  <style>
+    /* Basic styling */
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+      color: #000;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .dark-theme {
+      background-color: #121212;
+      color: #fff;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .pokecard {
+      display: inline-block;
+      width: 150px;
+      height: 250px;
+      margin: 10px;
+      background: #f0f0f0;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s;
+    }
+
+    .pokecard:hover {
+      transform: scale(1.05);
+    }
+
+    .pokecard img {
+      width: 100%;
+      height: 100px;
+      object-fit: contain;
+    }
+
+    .types span {
+      display: inline-block;
+      margin: 5px;
+      padding: 3px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+    }
+
+    .fire { background-color: #f08030; color: white; }
+    .water { background-color: #6890f0; color: white; }
+    .grass { background-color: #78c850; color: white; }
+
+    .button {
+      background: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 10px 0;
+    }
+
+    .button:hover {
+      background: #0056b3;
+    }
+
+    #pagination {
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Pokémon Explorer</h1>
+    <button class="button" onclick="toggleTheme()">Toggle Theme</button>
+
+    <div id="pokemon-list"></div>
+
+    <div id="pagination">
+      <button onclick="changePage(-1)">Prev</button>
+      <span id="page-num">Page 1</span>
+      <button onclick="changePage(1)">Next</button>
+    </div>
+  </div>
+
+  <script>
+    const apiUrl = 'https://pokeapi.co/api/v2/pokemon';
+    let currentPage = 1;
+    let totalPages = 1;
+
+    // Toggle between light and dark themes
+    function toggleTheme() {
+      document.body.classList.toggle('dark-theme');
+    }
+
+    // Fetch Pokémon data from the API
+    async function fetchPokemon(page = 1) {
+      const offset = (page - 1) * 20;
+      const response = await fetch(`${apiUrl}?limit=20&offset=${offset}`);
+      const data = await response.json();
+      totalPages = Math.ceil(data.count / 20);
+      displayPokemon(data.results);
+      document.getElementById('page-num').innerText = `Page ${page}`;
+    }
+
+    // Display the Pokémon list
+    function displayPokemon(pokemons) {
+      const pokemonListDiv = document.getElementById('pokemon-list');
+      pokemonListDiv.innerHTML = ''; // Clear previous cards
+
+      pokemons.forEach(async (pokemon) => {
+        const pokemonData = await fetchPokemonDetails(pokemon.url);
+        const card = createPokemonCard(pokemonData);
+        pokemonListDiv.appendChild(card);
+      });
+    }
+
+    // Fetch individual Pokémon details
+    async function fetchPokemonDetails(url) {
+      const response = await fetch(url);
+      return await response.json();
+    }
+
+    // Create the Pokémon card
+    function createPokemonCard(pokemon) {
+      const card = document.createElement('div');
+      card.classList.add('pokecard');
+
+      const image = document.createElement('img');
+      image.src = pokemon.sprites.front_default;
+      card.appendChild(image);
+
+      const name = document.createElement('h3');
+      name.innerText = pokemon.name;
+      card.appendChild(name);
+
+      const types = document.createElement('div');
+      types.classList.add('types');
+      pokemon.types.forEach(type => {
+        const typeSpan = document.createElement('span');
+        typeSpan.innerText = type.type.name;
+        typeSpan.classList.add(type.type.name);
+        types.appendChild(typeSpan);
+      });
+      card.appendChild(types);
+
+      const ability = document.createElement('p');
+      ability.innerText = `Ability: ${pokemon.abilities[0].ability.name}`;
+      card.appendChild(ability);
+
+      return card;
+    }
+
+    // Change page
+    function changePage(direction) {
+      currentPage += direction;
+      if (currentPage < 1) currentPage = 1;
+      if (currentPage > totalPages) currentPage = totalPages;
+      fetchPokemon(currentPage);
+    }
+
+    // Initial fetch
+    fetchPokemon(currentPage);
+  </script>
+</body>
+</html>
