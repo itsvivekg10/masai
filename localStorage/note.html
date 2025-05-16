@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task App</title>
+  </head>
+  <body>
+    <input type="text" id="inputBox" placeholder="Enter task" />
+    <ul id="taskList"></ul>
+    <button id="ADD">ADD</button>
+    <button id="CLEAR">CLEAR ALL</button>
+
+    <script>
+      const inputBox = document.getElementById("inputBox");
+      const addButton = document.getElementById("ADD");
+      const clearButton = document.getElementById("CLEAR");
+      const taskList = document.getElementById("taskList");
+
+      // Load tasks on page load
+      window.addEventListener("DOMContentLoaded", displayData);
+
+      addButton.addEventListener("click", () => {
+        const inputText = inputBox.value.trim();
+        if (inputText === "") {
+          alert("Please enter a task.");
+          return;
+        }
+
+        let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+        tasks.push(inputText);
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+        inputBox.value = "";
+        displayData();
+      });
+
+      clearButton.addEventListener("click", () => {
+        localStorage.removeItem("tasks");
+        displayData();
+      });
+
+      function displayData() {
+        let data = JSON.parse(localStorage.getItem("tasks")) || [];
+        taskList.innerHTML = "";
+        data.forEach((item) => {
+          let li = document.createElement("li");
+          li.innerText = item;
+          taskList.appendChild(li);
+        });
+      }
+    </script>
+  </body>
+</html>

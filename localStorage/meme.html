@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Meme Product Catalog</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 1rem;
+      }
+      .controls {
+        margin-bottom: 1rem;
+      }
+      input,
+      select,
+      button {
+        margin: 5px;
+        padding: 8px;
+        font-size: 1rem;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+      .card {
+        border: 2px solid #ccc;
+        border-radius: 10px;
+        padding: 10px;
+        text-align: center;
+        position: relative;
+      }
+      .card img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+      }
+      .favorite {
+        border-color: #ff9800;
+      }
+      .badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: #ff9800;
+        color: white;
+        padding: 2px 6px;
+        border-radius: 5px;
+        font-size: 0.75rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>😂 Meme Product Catalog</h2>
+
+    <div class="controls">
+      <input type="text" id="searchInput" placeholder="Search memes..." />
+      <select id="sortSelect">
+        <option value="">Sort By</option>
+        <option value="name">Name</option>
+        <option value="width">Width</option>
+        <option value="height">Height</option>
+      </select>
+      <label>
+        <input type="checkbox" id="showFavOnly" /> Show Favorites Only
+      </label>
+      <button onclick="fetchMemes()">Fetch Memes</button>
+    </div>
+
+    <div id="memeContainer" class="grid"></div>
+
+    <script>
+      let allMemes = [];
+      let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+      let searchTerm = localStorage.getItem("searchTerm") || "";
+      let sortOption = localStorage.getItem("sortOption") || "";
+      let showFavoritesOnly = localStorage.getItem("showFavOnly") === "true";
+
+      const searchInput = document.getElementById("searchInput");
+      const sortSelect = document.getElementById("sortSelect");
+      const showFavOnlyCheckbox = document.getElementById("showFavOnly");
+      const container = document.getElementById("memeContainer");
+
+      searchInput.value = searchTerm;
+      sortSelect.value = sortOption;
+      showFavOnlyCheckbox.checked = showFavoritesOnly;
+
+      async function fetchMemes() {
+        const res = await fetch("https://api.imgflip.com/get_memes");
+        const data = await res.json();
+        allMemes = data.data.memes;
+        renderMemes();
+      }
+
+      function renderMemes() {
+        let memes = [...allMemes];
+
+        // Filter by search
+        if (searchTerm) {
+          memes = memes.filter((m) =>
+            m.name.toLowerCase().includes(searchTerm.toLowerCase())
+          );
+        }
+
+        // Sort
+        if (sortOption === "name") {
+          memes.sort((a, b) => a.name.localeCompare(b.name));
+        } else if (sortOption === "width") {
+          memes.sort((a, b) => b.width - a.width);
+        } else if (sortOption === "height") {
+          memes.sort((a, b) => b.height - a.height);
+        }
+
+        // Favorites only filter
+        if (showFavoritesOnly) {
+          memes = memes.filter((m) => favorites.includes(m.id));
+        }
+
+        // Render
+        container.innerHTML = "";
+        if (memes.length === 0) {
+          container.innerHTML = "<p>No memes found.</p>";
+          return;
+        }
+
+        memes.forEach((meme) => {
+          const card = document.createElement("div");
+          card.className = "card";
+          if (favorites.includes(meme.id)) {
+            card.classList.add("favorite");
+          }
+
+          card.innerHTML = `
+          ${
+            favorites.includes(meme.id)
+              ? '<span class="badge">★ Favorite</span>'
+              : ""
+          }
+          <img src="${meme.url}" alt="${meme.name}">
+          <h4>${meme.name}</h4>
+          <p>Size: ${meme.width}x${meme.height}</p>
+          <button onclick="toggleFavorite('${meme.id}')">
+            ${
+              favorites.includes(meme.id)
+                ? "Remove Favorite"
+                : "Add to Favorites"
+            }
+          </button>
+        `;
+          container.appendChild(card);
+        });
+      }
+
+      function toggleFavorite(id) {
+        if (favorites.includes(id)) {
+          favorites = favorites.filter((fav) => fav !== id);
+        } else {
+          favorites.push(id);
+        }
+        localStorage.setItem("favorites", JSON.stringify(favorites));
+        renderMemes();
+      }
+
+      searchInput.addEventListener("input", (e) => {
+        searchTerm = e.target.value;
+        localStorage.setItem("searchTerm", searchTerm);
+        renderMemes();
+      });
+
+      sortSelect.addEventListener("change", (e) => {
+        sortOption = e.target.value;
+        localStorage.setItem("sortOption", sortOption);
+        renderMemes();
+      });
+
+      showFavOnlyCheckbox.addEventListener("change", (e) => {
+        showFavoritesOnly = e.target.checked;
+        localStorage.setItem("showFavOnly", showFavoritesOnly);
+        renderMemes();
+      });
+
+      // Restore state on load
+      window.addEventListener("load", () => {
+        if (allMemes.length === 0) {
+          fetchMemes();
+        }
+      });
+    </script>
+  </body>
+</html>

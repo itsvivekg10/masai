@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Persistent List with localStorage</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 2rem;
+        max-width: 500px;
+        margin: auto;
+      }
+      input,
+      button {
+        padding: 10px;
+        margin: 5px;
+        font-size: 1rem;
+      }
+      ul {
+        padding-left: 20px;
+      }
+      li {
+        margin: 5px 0;
+      }
+      .empty {
+        color: gray;
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>📝 Persistent Notes List</h2>
+
+    <input type="text" id="itemInput" placeholder="Enter item" />
+    <button onclick="addItem()">Add</button>
+    <button onclick="clearAll()">Clear All</button>
+
+    <ul id="itemList"></ul>
+    <p id="emptyMessage" class="empty">No items added yet</p>
+
+    <script>
+      let items = [];
+
+      // Load from localStorage
+      window.onload = function () {
+        const saved = localStorage.getItem("persistentList");
+        if (saved) {
+          items = JSON.parse(saved);
+        }
+        renderList();
+      };
+
+      function addItem() {
+        const input = document.getElementById("itemInput");
+        const value = input.value.trim();
+        if (value === "") {
+          alert("Please enter a valid item.");
+          return;
+        }
+
+        items.push(value);
+        input.value = "";
+        saveAndRender();
+      }
+
+      function clearAll() {
+        if (confirm("Are you sure you want to clear all items?")) {
+          items = [];
+          saveAndRender();
+        }
+      }
+
+      function saveAndRender() {
+        localStorage.setItem("persistentList", JSON.stringify(items));
+        renderList();
+      }
+
+      function renderList() {
+        const list = document.getElementById("itemList");
+        const message = document.getElementById("emptyMessage");
+        list.innerHTML = "";
+
+        if (items.length === 0) {
+          message.style.display = "block";
+        } else {
+          message.style.display = "none";
+          items.forEach((item, index) => {
+            const li = document.createElement("li");
+            li.textContent = item;
+            list.appendChild(li);
+          });
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Theme Switcher</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .light-theme {
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    .dark-theme {
+      background-color: #121212;
+      color: #f1f1f1;
+    }
+
+    .blue-theme {
+      background-color: #e0f0ff;
+      color: #003366;
+    }
+
+    select {
+      padding: 8px;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Select Theme</h2>
+  <select id="themeSelector">
+    <option value="light">Light</option>
+    <option value="dark">Dark</option>
+    <option value="blue">Blue</option>
+  </select>
+
+  <p>This text will change color based on the selected theme.</p>
+
+  <script>
+    const selector = document.getElementById('themeSelector');
+    const body = document.body;
+
+    function applyTheme(theme) {
+      body.className = ''; 
+      switch (theme) {
+        case 'dark':
+          body.classList.add('dark-theme');
+          break;
+        case 'blue':
+          body.classList.add('blue-theme');
+          break;
+        default:
+          body.classList.add('light-theme');
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = sessionStorage.getItem('selectedTheme') || 'light';
+      selector.value = savedTheme;
+      applyTheme(savedTheme);
+    });
+
+    selector.addEventListener('change', () => {
+      const selected = selector.value;
+      applyTheme(selected);
+      sessionStorage.setItem('selectedTheme', selected);
+    });
+  </script>
+
+</body>
+</html>
