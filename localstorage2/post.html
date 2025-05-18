@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input id="title" />
+    <input id="body" />
+    <button id="save">SAVE</button>
+    <div id="display"></div>
+  </body>
+</html>
+<script>
+  let display = document.getElementById("display");
+  let title = document.getElementById("title");
+  let body = document.getElementById("body");
+  let savebtn = document.getElementById("save");
+  savebtn.addEventListener("click", fetchData);
+  async function fetchData() {
+    try {
+      let res = await fetch("https://jsonplaceholder.typicode.com/posts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: title.value,
+          body: body.value,
+        }),
+      });
+      let data = await res.json();
+      console.log(data);
+      // displayData(data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  function displayData(data) {
+    display.innerHTML = "";
+    data.forEach((res) => {
+      let showData = document.createElement("div");
+      showData.innerText = res.body;
+      display.appendChild(showData);
+    });
+  }
+  // fetchData();
+</script>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Save User</title>
+  </head>
+  <body>
+    <input id="name" type="text" placeholder="Enter Your Name" />
+    <input id="email" type="email" placeholder="Enter Your Email" />
+    <button id="save">SAVE</button>
+
+    <script>
+      let save = document.getElementById("save");
+
+      save.addEventListener("click", async () => {
+        let name = document.getElementById("name").value;
+        let email = document.getElementById("email").value;
+
+        if (!name || !email) {
+          alert("Please fill in both name and email");
+          return;
+        }
+
+        let details = {
+          name,
+          email,
+        };
+
+        try {
+          let addData = await fetch(
+            "https://crud-8e101-default-rtdb.asia-southeast1.firebasedatabase.app/details.json",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(details),
+            }
+          );
+          let res = await addData.json();
+          console.log("Saved:", res);
+
+          // Clear inputs
+          document.getElementById("name").value = "";
+          document.getElementById("email").value = "";
+        } catch (err) {
+          console.error("Failed to save data:", err);
+        }
+      });
+    </script>
+  </body>
+</html>

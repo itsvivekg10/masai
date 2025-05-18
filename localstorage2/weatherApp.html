@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather App</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Weather App</h1>
+      <input type="text" id="city" placeholder="Enter city name" />
+      <button onclick="fetchWeatherData()">Search</button>
+
+      <div id="loading" class="loading">Loading...</div>
+      <div id="error" class="error"></div>
+
+      <div id="current-weather">
+        <h2>Current Weather</h2>
+        <div id="weather-details"></div>
+        <img id="weather-icon" src="" alt="Weather Icon" />
+      </div>
+
+      <div id="forecast">
+        <h2>5-Day Forecast</h2>
+        <div id="forecast-details"></div>
+      </div>
+
+      <div>
+        <label for="unit-toggle">Temperature Unit:</label>
+        <input type="radio" id="celsius" name="unit" value="metric" checked />
+        Celsius
+        <input type="radio" id="fahrenheit" name="unit" value="imperial" />
+        Fahrenheit
+      </div>
+
+      <div>
+        <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+      </div>
+    </div>
+
+    <!-- <script src="app.js"></script> -->
+  </body>
+</html>
+<script>
+  const apiKey = "0c4ea1814c9670c992e8d06d529c7a72"; // Replace with your actual API key
+  let unit = "metric"; // Default unit is Celsius
+  let darkMode = localStorage.getItem("darkMode") === "true";
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // Apply dark mode based on user preference
+    if (darkMode) {
+      document.body.classList.add("dark-mode");
+    }
+
+    // Add event listener for temperature unit toggle
+    document
+      .getElementById("celsius")
+      .addEventListener("change", () => (unit = "metric"));
+    document
+      .getElementById("fahrenheit")
+      .addEventListener("change", () => (unit = "imperial"));
+  });
+
+  function fetchWeatherData() {
+    const city = document.getElementById("city").value.trim();
+    if (!city) return;
+
+    document.getElementById("loading").style.display = "block";
+    document.getElementById("error").style.display = "none";
+    document.getElementById("current-weather").style.display = "none";
+    document.getElementById("forecast").style.display = "none";
+
+    const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=${unit}`;
+
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.cod === "404") {
+          showError("City not found");
+          return;
+        }
+        displayWeather(data);
+        fetchForecast(data.coord.lat, data.coord.lon);
+      })
+      .catch(() => showError("API request failed"))
+      .finally(() => {
+        document.getElementById("loading").style.display = "none";
+      });
+  }
+
+  function displayWeather(data) {
+    const temp = data.main.temp;
+    const tempF = (temp * 9) / 5 + 32;
+    const weatherCondition = data.weather[0].description;
+    const humidity = data.main.humidity;
+    const windSpeed = data.wind.speed;
+    const iconCode = data.weather[0].icon;
+
+    document.getElementById("weather-details").innerHTML = `
+        <p>Temperature: ${temp}°C / ${tempF.toFixed(1)}°F</p>
+        <p>Condition: ${weatherCondition}</p>
+        <p>Humidity: ${humidity}%</p>
+        <p>Wind Speed: ${windSpeed} m/s</p>
+    `;
+    document.getElementById(
+      "weather-icon"
+    ).src = `http://openweathermap.org/img/wn/${iconCode}.png`;
+    document.getElementById("current-weather").style.display = "block";
+  }
+
+  function fetchForecast(lat, lon) {
+    const url = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=${unit}`;
+
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        let forecastHTML = "";
+        data.list.slice(0, 5).forEach((item) => {
+          const date = new Date(item.dt * 1000).toLocaleDateString();
+          const temp = item.main.temp;
+          const tempF = (temp * 9) / 5 + 32;
+          const weatherCondition = item.weather[0].description;
+          const iconCode = item.weather[0].icon;
+
+          forecastHTML += `
+                    <div class="forecast-day">
+                        <p>${date}</p>
+                        <p>Temperature: ${temp}°C / ${tempF.toFixed(1)}°F</p>
+                        <p>${weatherCondition}</p>
+                        <img src="http://openweathermap.org/img/wn/${iconCode}.png" alt="icon" />
+                    </div>
+                `;
+        });
+        document.getElementById("forecast-details").innerHTML = forecastHTML;
+        document.getElementById("forecast").style.display = "block";
+      })
+      .catch(() => showError("Forecast data fetch failed"));
+  }
+
+  function showError(message) {
+    document.getElementById("error").innerText = message;
+    document.getElementById("error").style.display = "block";
+  }
+
+  function toggleDarkMode() {
+    darkMode = !darkMode;
+    localStorage.setItem("darkMode", darkMode);
+    document.body.classList.toggle("dark-mode");
+  }
+</script>

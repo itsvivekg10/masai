@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Listing</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f4f4f4;
+      }
+      #display {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+      }
+      .product-card {
+        background-color: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+      .product-card img {
+        max-width: 100%;
+        height: 200px;
+        object-fit: contain;
+        margin-bottom: 10px;
+      }
+      .product-card h3 {
+        font-size: 16px;
+        margin: 10px 0;
+      }
+      .product-card p {
+        font-weight: bold;
+        color: #0088cc;
+      }
+      .product-card button {
+        padding: 8px 12px;
+        background-color: #0088cc;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .error-message {
+        color: red;
+        text-align: center;
+        font-size: 18px;
+        margin-top: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Product Listings</h1>
+    <div id="display">Loading products...</div>
+
+    <script>
+      const display = document.getElementById("display");
+
+      async function fetchData() {
+        try {
+          const res = await fetch("https://fakestoreapi.com/products");
+          if (!res.ok) throw new Error("Failed to fetch");
+          const data = await res.json();
+          displayData(data);
+        } catch (err) {
+          console.error(err);
+          display.innerHTML = `<div class="error-message">Failed to fetch products. Please try again later.</div>`;
+        }
+      }
+
+      function displayData(data) {
+        display.innerHTML = "";
+        data.forEach((product) => {
+          const card = document.createElement("div");
+          card.className = "product-card";
+
+          card.innerHTML = `
+            <img src="${product.image}" alt="${product.title}" />
+            <h3>${product.title}</h3>
+            <p>$${product.price}</p>
+            <button>View Details</button>
+          `;
+
+          display.appendChild(card);
+        });
+      }
+
+      fetchData();
+    </script>
+  </body>
+</html>

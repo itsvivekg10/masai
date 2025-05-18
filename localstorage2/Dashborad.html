@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Dashboard</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Segoe UI", sans-serif;
+        background-color: #f4f6f8;
+      }
+
+      header {
+        background-color: #0088cc;
+        color: white;
+        padding: 15px 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+
+      h1 {
+        margin: 0 0 10px 0;
+        font-size: 24px;
+      }
+
+      #input-part {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+      }
+
+      label {
+        font-weight: bold;
+        margin-right: 5px;
+      }
+
+      input,
+      select {
+        padding: 8px;
+        font-size: 14px;
+        border: none;
+        border-radius: 6px;
+        outline: none;
+      }
+
+      #addBtn {
+        background-color: #005f99;
+        color: white;
+        padding: 9px 14px;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      #addBtn:hover {
+        background-color: #004c7a;
+      }
+
+      main {
+        padding: 20px;
+      }
+
+      .table-header,
+      .student-row {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        padding: 12px 20px;
+        border-bottom: 1px solid #ddd;
+        align-items: center;
+        font-weight: bold;
+      }
+
+      .table-header {
+        background-color: #0088cc;
+        color: white;
+        position: sticky;
+        top: 100px;
+        z-index: 500;
+      }
+
+      .student-row {
+        background-color: #fff;
+        font-weight: normal;
+      }
+
+      .student-row:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      .actions {
+        display: flex;
+        gap: 6px;
+      }
+
+      button.edit-btn,
+      button.delete-btn {
+        padding: 6px 12px;
+        font-size: 13px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      button.edit-btn {
+        background-color: #ffc107;
+        color: #333;
+      }
+
+      button.edit-btn:hover {
+        background-color: #e0a800;
+      }
+
+      button.delete-btn {
+        background-color: #dc3545;
+        color: white;
+      }
+
+      button.delete-btn:hover {
+        background-color: #c82333;
+      }
+      .dark-mode {
+        background-color: #1e1e1e;
+        color: white;
+      }
+
+      .dark-mode header {
+        background-color: #333;
+      }
+
+      .dark-mode .table-header {
+        background-color: #444;
+      }
+
+      .dark-mode .student-row {
+        background-color: #2c2c2c;
+        color: white;
+      }
+
+      .dark-mode .student-row:nth-child(even) {
+        background-color: #3a3a3a;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>STUDENT DASHBOARD</h1>
+      <div id="input-part">
+        <label for="name">Name:</label>
+        <input id="name" placeholder="Name" />
+
+        <label for="age">Age:</label>
+        <input id="age" type="number" placeholder="Age" />
+
+        <label for="enroll">Enrolled:</label>
+        <select id="enroll">
+          <option value="true">YES</option>
+          <option value="false">NO</option>
+        </select>
+
+        <label for="grade">Grade:</label>
+        <input id="grade" placeholder="Grade" />
+
+        <button id="addBtn">ADD</button>
+      </div>
+      <button id="theme">🌙 Dark Mode</button>
+    </header>
+
+    <main>
+      <div class="table-header">
+        <span>NAME</span>
+        <span>AGE</span>
+        <span>GRADE</span>
+        <span>ENROLLED</span>
+        <span>ACTIONS</span>
+      </div>
+      <div id="display"></div>
+    </main>
+
+    <script>
+      let name = document.getElementById("name");
+      let age = document.getElementById("age");
+      let enroll = document.getElementById("enroll");
+      let grade = document.getElementById("grade");
+      let addBtn = document.getElementById("addBtn");
+      let display = document.getElementById("display");
+      let theme = document.getElementById("theme");
+
+      //const theme = document.getElementById("theme");
+
+      theme.addEventListener("click", () => {
+        document.body.classList.toggle("dark-mode");
+
+        // Optional: Toggle button text/icon
+        if (document.body.classList.contains("dark-mode")) {
+          theme.textContent = "☀️ Light Mode";
+        } else {
+          theme.textContent = "🌙 Dark Mode";
+        }
+      });
+
+      addBtn.addEventListener("click", async () => {
+        if (!name.value || !age.value || !enroll.value || !grade.value) {
+          alert("Please fill in all fields.");
+          return;
+        }
+
+        let student = {
+          name: name.value.trim(),
+          age: +age.value,
+          enroll: enroll.value === "true",
+          grade: grade.value.trim(),
+        };
+
+        try {
+          await fetch(
+            "https://studentdashbord-default-rtdb.asia-southeast1.firebasedatabase.app/students.json",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(student),
+            }
+          );
+
+          name.value = "";
+          age.value = "";
+          enroll.value = "true";
+          grade.value = "";
+
+          fetchAllStudents();
+        } catch (err) {
+          console.error("Error adding student:", err);
+        }
+      });
+
+      async function fetchAllStudents() {
+        try {
+          let res = await fetch(
+            "https://studentdashbord-default-rtdb.asia-southeast1.firebasedatabase.app/students.json"
+          );
+          let data = await res.json();
+          displayData(data);
+        } catch (err) {
+          console.error("Error fetching students:", err);
+        }
+      }
+
+      function displayData(students) {
+        display.innerHTML = "";
+        students = Object.entries(students);
+
+        students.forEach(([id, ele]) => {
+          const row = document.createElement("div");
+          row.className = "student-row";
+          row.innerHTML = `
+                       <span>${ele.name}</span>
+                       <span>${ele.age}</span>
+                       <span>${ele.grade}</span>
+                       <span>${ele.enroll ? "YES" : "NO"}</span>
+                       <div class="actions">
+                         <button class="edit-btn">EDIT</button>
+                         <button class="delete-btn">DELETE</button>
+                       </div>
+                     `;
+          row.querySelector(".edit-btn").addEventListener("click", () => {
+            row.innerHTML = `
+                   <input class="edit-name" value="${ele.name}" />
+                   <input class="edit-age" type="number" value="${ele.age}" />
+                   <input class="edit-grade" value="${ele.grade}" />
+                   <select class="edit-enroll">
+                     <option value="true" ${
+                       ele.enroll ? "selected" : ""
+                     }>YES</option>
+                     <option value="false" ${
+                       !ele.enroll ? "selected" : ""
+                     }>NO</option>
+                   </select>
+                   <button class="save-btn" style="width:50px">SAVE</button>
+                   <button class="cancel-btn"style="width:70px">CANCEL</button>
+                 `;
+            row
+              .querySelector(".save-btn")
+              .addEventListener("click", async () => {
+                let updateStudents = {
+                  name: row.querySelector(".edit-name").value,
+                  age: +row.querySelector(".edit-age").value,
+                  grade: row.querySelector(".edit-grade").value,
+                  enroll: row.querySelector(".edit-enroll").value === "true",
+                };
+
+                await fetch(
+                  `https://studentdashbord-default-rtdb.asia-southeast1.firebasedatabase.app/students/${id}.json`,
+                  {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(updateStudents),
+                  }
+                );
+
+                fetchAllStudents();
+              });
+          });
+          row
+            .querySelector(".delete-btn")
+            .addEventListener("click", async () => {
+              let data = await fetch(
+                `https://studentdashbord-default-rtdb.asia-southeast1.firebasedatabase.app/students/${id}.json`,
+                {
+                  method: "DELETE",
+                }
+              );
+              fetchAllStudents();
+            });
+
+          display.appendChild(row);
+        });
+      }
+
+      fetchAllStudents();
+    </script>
+  </body>
+</html>

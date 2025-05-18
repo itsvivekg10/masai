@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Manager</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      input {
+        padding: 8px;
+        margin: 5px;
+        display: inline-block;
+      }
+      button {
+        padding: 8px 12px;
+        margin: 5px;
+        cursor: pointer;
+      }
+      .student {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Student Manager</h2>
+
+    <input type="text" id="name" placeholder="Enter Name" />
+    <input type="number" id="age" placeholder="Enter Age" />
+    <input type="text" id="course" placeholder="Enter Course" />
+    <button id="addBtn">Add Student</button>
+
+    <h3>All Students</h3>
+    <div id="studentList">
+      <!-- Students will be displayed here -->
+    </div>
+  </body>
+</html>
+<script>
+  let addbtn = document.getElementById("addBtn");
+  addbtn.addEventListener("click", async () => {
+    let names = document.getElementById("name");
+    let age = document.getElementById("age");
+    let course = document.getElementById("course");
+    let name = {
+      names: names.value,
+      age: age.value,
+      course: course.value,
+    };
+    try {
+      let data = await fetch(
+        "https://68092f831f1a52874cdc239b.mockapi.io/students/name",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(name),
+        }
+      );
+      let res = await data.json();
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+  });
+</script>
