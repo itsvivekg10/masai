@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task Editor</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      .task-card {
+        border: 1px solid #ccc;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .task-info {
+        flex-grow: 1;
+      }
+      button {
+        padding: 5px 10px;
+        background-color: #0088cc;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Task List</h2>
+    <div id="editForm" style="display: none; margin-top: 20px">
+      <h3>Edit Task</h3>
+      <input type="text" id="editTaskName" placeholder="Task name" />
+      <input type="text" id="editTaskStats" placeholder="Task status" />
+      <button onclick="saveTask()">Save</button>
+    </div>
+    <div id="taskContainer"></div>
+
+    <script>
+      async function loadTasks() {
+        let res = await fetch(
+          "https://68092f831f1a52874cdc239b.mockapi.io/products/tasks"
+        );
+        let data = await res.json();
+        displayTasks(data);
+      }
+
+      function displayTasks(data) {
+        const container = document.getElementById("taskContainer");
+        container.innerHTML = "";
+
+        data.forEach((task) => {
+          const div = document.createElement("div");
+          div.className = "task-card";
+
+          div.innerHTML = `
+            <div class="task-info">
+              <strong>${task.task}</strong> - <em>${task.stats}</em>
+            </div>
+            <button onclick="editTask('${task.id}')">Edit</button>
+          `;
+
+          container.appendChild(div);
+        });
+      }
+
+      function editTask(id) {
+        fetch("https://68092f831f1a52874cdc239b.mockapi.io/products/tasks");
+      }
+
+      loadTasks();
+    </script>
+  </body>
+</html>

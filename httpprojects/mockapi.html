@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div
+      id="header"
+      style="height: 100px; width: 100%; background-color: brown"
+    >
+      <h1>REGISTER NEW USER</h1>
+      <input id="name" placeholder="name" />
+      <input id="email" placeholder="email" />
+      <input id="pass" placeholder="enter pass" />
+      <button
+        style="
+          background-color: aliceblue;
+          color: red;
+          width: 100px;
+          height: 30px;
+        "
+        id="reg"
+      >
+        REGISTER
+      </button>
+    </div>
+    <div id="data"></div>
+  </body>
+</html>
+<script>
+  let displayData = document.getElementById("data");
+  let reg = document.getElementById("reg");
+  reg.addEventListener("click", fetchData);
+  async function fetchData() {
+    displayData.innerHTML = "";
+    let name = document.getElementById("name").value;
+    let email = document.getElementById("email").value;
+    let pass = Number(document.getElementById("pass").value);
+    let res = await fetch(
+      "https://68092f831f1a52874cdc239b.mockapi.io/products/users",
+      {
+        method: "POST",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          pass: pass,
+        }),
+      }
+    );
+
+    let data = await res.json();
+    Display();
+  }
+  async function Display() {
+    let res = await fetch(
+      "https://68092f831f1a52874cdc239b.mockapi.io/products/users"
+    );
+    let data = await res.json();
+    console.log(data);
+
+    //console.log(arr);
+    displayData.innerHTML = "";
+    data.forEach((ele) => {
+      let ul = document.createElement("ul");
+      ul.innerHTML = `<li>${ele.name}</li>`;
+      displayData.appendChild(ul);
+    });
+  }
+  Display();
+</script>

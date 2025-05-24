@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input id="name" placeholder="name" />
+    <input id="email" placeholder="email" />
+    <input id="pass" placeholder="enter pass" />
+    <button id="reg">REGISTER</button>
+  </body>
+</html>
+<script>
+  let reg = document.getElementById("reg");
+  reg.addEventListener("click", fetchData);
+  async function fetchData() {
+    let name = document.getElementById("name").value;
+    let email = document.getElementById("email").value;
+    let pass = Number(document.getElementById("pass").value);
+    let res = await fetch(
+      "https://68092f831f1a52874cdc239b.mockapi.io/products/users",
+      {
+        method: "POST",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          pass: pass,
+        }),
+      }
+    );
+
+    let data = await res.json();
+    console.log(data);
+  }
+</script>

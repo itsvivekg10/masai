@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Search</title>
+  </head>
+  <body>
+    <input id="search" type="text" placeholder="Search product name" />
+    <button id="searchbtn">SEARCH</button>
+
+    <div id="results"></div>
+
+    <script>
+      let searchbtn = document.getElementById("searchbtn");
+
+      async function fetchData() {
+        let searchInput = document.getElementById("search").value.toLowerCase();
+        let res = await fetch(
+          "https://68092f831f1a52874cdc239b.mockapi.io/products/name/"
+        );
+        let data = await res.json();
+
+        let filtered = data.filter((ele) =>
+          ele.name.toLowerCase().includes(searchInput)
+        );
+
+        // Display filtered results
+        let resultsDiv = document.getElementById("results");
+        resultsDiv.innerHTML = ""; // clear previous results
+        filtered.forEach((ele) => {
+          let p = document.createElement("p");
+          p.innerText = `${ele.name} - ${ele.price}`;
+          let img = document.createElement("img");
+          img.src = `${ele.img}`;
+          resultsDiv.appendChild(p);
+          resultsDiv.appendChild(img);
+        });
+      }
+
+      searchbtn.addEventListener("click", fetchData);
+    </script>
+  </body>
+</html>
