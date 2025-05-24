@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Form</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(to right, #e0f7fa, #ffffff);
+        margin: 0;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: auto;
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        padding: 12px;
+        margin-top: 12px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+        transition: border 0.3s;
+        resize: vertical;
+      }
+
+      input:focus,
+      textarea:focus {
+        border-color: #0088cc;
+        outline: none;
+      }
+
+      textarea {
+        min-height: 100px;
+      }
+
+      button {
+        width: 100%;
+        padding: 14px;
+        background-color: #0088cc;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 16px;
+        transition: background-color 0.3s;
+      }
+
+      button:hover {
+        background-color: #0077b3;
+      }
+
+      #display-user {
+        margin-top: 30px;
+      }
+
+      .user-card {
+        background: #f9f9f9;
+        border-left: 4px solid #0088cc;
+        border-radius: 6px;
+        padding: 16px 20px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      }
+
+      .user-card h1 {
+        font-size: 18px;
+        color: #333;
+        margin: 0 0 6px 0;
+      }
+
+      .user-card h2 {
+        font-size: 15px;
+        color: #555;
+        margin: 0;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+
+      @media (max-width: 600px) {
+        .container {
+          padding: 20px;
+        }
+
+        .user-card h1 {
+          font-size: 16px;
+        }
+
+        .user-card h2 {
+          font-size: 14px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <input type="text" id="name" placeholder="Enter name" />
+      <textarea id="msg" placeholder="Enter message"></textarea>
+      <button id="save">Save</button>
+
+      <div id="display-user"></div>
+    </div>
+
+    <script>
+      let savebtn = document.getElementById("save");
+      savebtn.addEventListener("click", getData);
+
+      async function getData() {
+        let name = document.getElementById("name").value.trim();
+        let msg = document.getElementById("msg").value.trim();
+
+        if (!name || !msg) {
+          alert("Please fill in both name and message.");
+          return;
+        }
+
+        await fetch(
+          "https://studentdashbord-default-rtdb.asia-southeast1.firebasedatabase.app/users.json",
+          {
+            method: "POST",
+            headers: { "Content-type": "application/json" },
+            body: JSON.stringify({ name, msg }),
+          }
+        );
+
+        document.getElementById("name").value = "";
+        document.getElementById("msg").value = "";
+        fetchData();
+      }
+
+      async function fetchData() {
+        let data = await fetch(
+          "https://studentdashbord-default-rtdb.asia-southeast1.firebasedatabase.app/users.json"
+        );
+        let res = await data.json();
+        let userList = Object.values(res || {});
+        display(userList.reverse());
+      }
+
+      let render = document.getElementById("display-user");
+
+      function display(data) {
+        render.innerHTML = "";
+        data.forEach((ele) => {
+          let card = document.createElement("div");
+          card.className = "user-card";
+
+          let h1 = document.createElement("h1");
+          let h2 = document.createElement("h2");
+
+          h1.innerText = ele.name;
+          h2.innerText = ele.msg;
+
+          card.appendChild(h1);
+          card.appendChild(h2);
+          render.appendChild(card);
+        });
+      }
+
+      fetchData();
+    </script>
+  </body>
+</html>

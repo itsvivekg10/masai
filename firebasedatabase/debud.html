@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+</html>
+<script>
+  const deleteUser = (key) => {
+    fetch(`https://your-project-id.firebaseio.com/users/{key}.json`, {
+      method: "DELETE",
+    })
+      .then((response) => response.json())
+      .then(() => {
+        console.log("User deleted successfully");
+      })
+      .catch((error) => console.error("Error deleting user:", error));
+  };
+</script>
