@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Manager</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      input {
+        margin: 5px;
+      }
+      #displayUi > div {
+        margin: 5px 0;
+        padding: 10px;
+        border: 1px solid #ccc;
+      }
+      button {
+        margin-left: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>ADD STUDENT</h1>
+    <input id="name" placeholder="Enter Name" />
+    <input id="grade" placeholder="Enter Grade" />
+    <input id="sec" placeholder="Enter Section" />
+    <input id="age" placeholder="Enter Age" />
+    <input id="score" placeholder="Enter Score" />
+    <button id="add">ADD</button>
+
+    <br /><br />
+    <input id="search" placeholder="Search by Name" />
+    <button id="searchBtn">Search</button>
+
+    <h2>Student List</h2>
+    <div id="displayUi"></div>
+
+    <script>
+      const addBtn = document.getElementById("add");
+      const searchBtn = document.getElementById("searchBtn");
+      const displayUi = document.getElementById("displayUi");
+      const searchInput = document.getElementById("search");
+
+      let allStudents = {};
+
+      addBtn.addEventListener("click", addData);
+      searchBtn.addEventListener("click", () => {
+        const term = searchInput.value.toLowerCase();
+        const filtered = Object.entries(allStudents).filter(([id, student]) =>
+          student.name.toLowerCase().includes(term)
+        );
+        displayData(Object.fromEntries(filtered));
+      });
+
+      async function addData() {
+        const name = document.getElementById("name").value;
+        const age = document.getElementById("age").value;
+        const grade = document.getElementById("grade").value;
+        const sec = document.getElementById("sec").value;
+        const score = document.getElementById("score").value;
+
+        const res = await fetch(
+          "https://studentdas-3bd33-default-rtdb.asia-southeast1.firebasedatabase.app/students.json",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, age, grade, sec, score }),
+          }
+        );
+
+        await fetchData();
+      }
+
+      async function fetchData() {
+        const res = await fetch(
+          "https://studentdas-3bd33-default-rtdb.asia-southeast1.firebasedatabase.app/students.json"
+        );
+        const data = await res.json();
+        allStudents = data || {};
+        displayData(allStudents);
+      }
+
+      function displayData(data) {
+        displayUi.innerHTML = "";
+        for (const id in data) {
+          const student = data[id];
+          const div = document.createElement("div");
+
+          div.innerHTML = `
+          <strong>${student.name}</strong> | Grade: ${student.grade} | Sec: ${student.sec} | Age: ${student.age} | Score: ${student.score}
+          <button onclick="deleteStudent('${id}')">Delete</button>
+          <button onclick="editStudent('${id}')">Edit</button>
+        `;
+
+          displayUi.appendChild(div);
+        }
+      }
+
+      async function deleteStudent(id) {
+        let data = await fetch(
+          `https://studentdas-3bd33-default-rtdb.asia-southeast1.firebasedatabase.app/students{id}.json`,
+          {
+            method: "DELETE",
+          }
+        );
+        await fetchData();
+      }
+
+      function editStudent(id) {
+        const student = allStudents[id];
+        document.getElementById("name").value = student.name;
+        document.getElementById("age").value = student.age;
+        document.getElementById("grade").value = student.grade;
+        document.getElementById("sec").value = student.sec;
+        document.getElementById("score").value = student.score;
+
+        addBtn.textContent = "Update";
+        addBtn.onclick = async function () {
+          const updated = {
+            name: document.getElementById("name").value,
+            age: document.getElementById("age").value,
+            grade: document.getElementById("grade").value,
+            sec: document.getElementById("sec").value,
+            score: document.getElementById("score").value,
+          };
+
+          await fetch(
+            `https://studentdas-3bd33-default-rtdb.asia-southeast1.firebasedatabase.app/students/${id}.json`,
+            {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(updated),
+            }
+          );
+
+          addBtn.textContent = "ADD";
+          addBtn.onclick = addData;
+          await fetchData();
+        };
+      }
+
+      fetchData();
+    </script>
+  </body>
+</html>
