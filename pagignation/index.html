@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sort Users - JSONPlaceholder</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        text-align: center;
+        color: #0088cc;
+      }
+
+      .controls {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 20px;
+      }
+
+      select {
+        padding: 6px 10px;
+        font-size: 16px;
+      }
+
+      .user-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 15px;
+      }
+
+      .user-card {
+        background-color: #e6f7ff;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .user-card h3 {
+        margin: 0 0 8px;
+        color: #005577;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>User Directory</h1>
+
+      <div class="controls">
+        <label for="sort">Sort By:</label>
+        <select id="sort">
+          <option value="">Default</option>
+          <option value="name">Name (A-Z)</option>
+          <option value="-name">Name (Z-A)</option>
+        </select>
+      </div>
+
+      <div id="userList" class="user-list"></div>
+    </div>
+
+    <script>
+      const userList = document.getElementById("userList");
+      const sortSelect = document.getElementById("sort");
+      let users = [];
+
+      async function fetchUsers() {
+        try {
+          const res = await fetch("https://jsonplaceholder.typicode.com/users");
+          if (!res.ok) throw new Error("Failed to fetch users");
+          users = await res.json();
+          renderUsers(users);
+        } catch (error) {
+          userList.innerHTML =
+            '<p style="color:red;">Error: ' + error.message + "</p>";
+        }
+      }
+
+      function renderUsers(data) {
+        userList.innerHTML = "";
+        data.forEach((user) => {
+          const card = document.createElement("div");
+          card.className = "user-card";
+          card.innerHTML = `
+          <h3>${user.name}</h3>
+          <p><strong>Email:</strong> ${user.email}</p>
+          <p><strong>City:</strong> ${user.address.city}</p>
+        `;
+          userList.appendChild(card);
+        });
+      }
+
+      function sortUsers(criteria) {
+        let sorted = [...users];
+        if (criteria === "name") {
+          sorted.sort((a, b) => a.name.localeCompare(b.name));
+        } else if (criteria === "-name") {
+          sorted.sort((a, b) => b.name.localeCompare(a.name));
+        }
+        renderUsers(sorted);
+      }
+
+      sortSelect.addEventListener("change", (e) => {
+        const sortBy = e.target.value;
+        const queryParam = new URLSearchParams({ sort: sortBy });
+        history.replaceState(null, "", "?" + queryParam.toString());
+        sortUsers(sortBy);
+      });
+
+      window.addEventListener("load", () => {
+        const params = new URLSearchParams(window.location.search);
+        const sortBy = params.get("sort") || "";
+        sortSelect.value = sortBy;
+        fetchUsers().then(() => {
+          if (sortBy) sortUsers(sortBy);
+        });
+      });
+    </script>
+  </body>
+</html>
