@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movie Search</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: #f0f2f5;
+        padding: 20px;
+      }
+
+      .navbar {
+        height: 100px;
+        width: 100%;
+        background-color: #1e3a8a;
+        border: 2px solid #1e3a8a;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 40px;
+        color: white;
+      }
+
+      .navbar h2 {
+        font-size: 32px;
+        font-weight: bold;
+      }
+
+      #search {
+        width: 300px;
+        height: 40px;
+        padding: 0 15px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+      }
+
+      #result {
+        margin: 30px 0 10px 10px;
+        font-size: 24px;
+        font-weight: 600;
+        color: #333;
+      }
+
+      #updateUi {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+        padding: 10px;
+      }
+
+      .divChild {
+        background-color: white;
+        border-radius: 10px;
+        padding: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition: transform 0.2s ease;
+      }
+
+      .divChild:hover {
+        transform: scale(1.03);
+      }
+
+      .divChild h6 {
+        font-size: 16px;
+        margin-bottom: 10px;
+        color: #444;
+      }
+
+      .divChild img {
+        width: 100%;
+        border-radius: 8px;
+        height: 350px;
+        object-fit: cover;
+      }
+
+      @media (max-width: 500px) {
+        .navbar {
+          flex-direction: column;
+          height: auto;
+          gap: 10px;
+          padding: 20px;
+        }
+
+        #search {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar">
+      <h2>MOVIES</h2>
+      <input id="search" placeholder="Search movies here..." />
+    </div>
+
+    <h1 id="result"></h1>
+    <div id="updateUi"></div>
+
+    <script>
+      let result = document.getElementById("result");
+      let updateUi = document.getElementById("updateUi");
+      let searchInput = document.getElementById("search");
+      let timer;
+
+      searchInput.addEventListener("input", (e) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          fetchData(e.target.value);
+        }, 1000);
+      });
+
+      async function fetchData(query) {
+        try {
+          const data = await fetch(
+            `https://www.omdbapi.com/?apikey=71ed8488&s=${query}`
+          );
+          const res = await data.json();
+          display(res);
+        } catch (err) {
+          console.log(err);
+        }
+      }
+
+      function display(data) {
+        updateUi.innerHTML = "";
+        if (!data || data.Response === "False") {
+          result.innerText = "No Movies Found";
+          return;
+        }
+
+        result.innerText = "Search Results";
+
+        data.Search.forEach((ele) => {
+          let div = document.createElement("div");
+          div.className = "divChild";
+          div.innerHTML = `
+            <h6>${ele.Title} (${ele.Year})</h6>
+            <img src="${
+              ele.Poster !== "N/A"
+                ? ele.Poster
+                : "https://via.placeholder.com/200x300?text=No+Image"
+            }" />
+          `;
+          updateUi.appendChild(div);
+        });
+      }
+    </script>
+  </body>
+</html>

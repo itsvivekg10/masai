@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Random Image Generator</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      body {
+        background-color: #f4f4f4;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+      h1 {
+        margin-bottom: 20px;
+        color: #333;
+      }
+      #result {
+        height: 400px;
+        width: 600px;
+        border: 3px dashed #0088cc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: white;
+        margin-bottom: 20px;
+        overflow: hidden;
+      }
+      #result img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: cover;
+        border-radius: 10px;
+      }
+      #imgBtn {
+        padding: 12px 24px;
+        font-size: 16px;
+        font-weight: bold;
+        background-color: #0088cc;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      #imgBtn:hover {
+        background-color: #006fa1;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Random Image Generator</h1>
+    <div id="result">Click the button to load an image!</div>
+    <button id="imgBtn">GET IMAGE</button>
+
+    <script>
+      let btn = document.getElementById("imgBtn");
+      let result = document.getElementById("result");
+      let flag = true;
+
+      btn.addEventListener("click", buttonClick);
+
+      function buttonClick() {
+        if (flag) {
+          fetchImage();
+          flag = false;
+          setTimeout(() => {
+            flag = true;
+          }, 1000); // 10 seconds throttle
+        }
+      }
+
+      function fetchImage() {
+        result.innerHTML = "<span>Loading...</span>";
+        const img = document.createElement("img");
+        img.src = "https://picsum.photos/600/400?random=" + Math.random();
+        img.onload = () => {
+          result.innerHTML = "";
+          result.appendChild(img);
+        };
+      }
+    </script>
+  </body>
+</html>
