@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Dashboard</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+      }
+      body {
+        background-color: #f4f4f4;
+        padding: 20px;
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #333;
+      }
+      #productContainer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+      }
+      .card {
+        width: 220px;
+        background-color: white;
+        border-radius: 10px;
+        padding: 15px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition: 0.3s;
+      }
+      .card img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 10px;
+      }
+      .card h4 {
+        font-size: 18px;
+        margin: 5px 0;
+      }
+      .card h5 {
+        font-size: 16px;
+        color: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>User Dashboard</h1>
+    <div id="productContainer"></div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        getDocs,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyCHw65zq7-ZlMhDjLhwcy1lVxv98tNL40E",
+        authDomain: "authentication-9762a.firebaseapp.com",
+        projectId: "authentication-9762a",
+        storageBucket: "authentication-9762a.appspot.com",
+        messagingSenderId: "1077604200859",
+        appId: "1:1077604200859:web:f685d2c47ac5fdfd85b13e",
+        measurementId: "G-X84XVF1026",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      const container = document.getElementById("productContainer");
+
+      async function fetchProducts() {
+        try {
+          const querySnapshot = await getDocs(collection(db, "products"));
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            const card = document.createElement("div");
+            card.className = "card";
+            card.innerHTML = `
+              <img src="${data.img}" alt="${data.pName}" />
+              <h4>${data.pName}</h4>
+              <h5>Price: ₹${data.price}</h5>
+            `;
+            container.appendChild(card);
+          });
+        } catch (err) {
+          console.error("Failed to fetch products:", err);
+        }
+      }
+
+      fetchProducts();
+    </script>
+  </body>
+</html>
