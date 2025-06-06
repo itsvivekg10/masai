@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Search Dashboard</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 40px;
+        text-align: center;
+      }
+      input {
+        padding: 10px;
+        width: 300px;
+        font-size: 16px;
+      }
+      .results {
+        margin-top: 20px;
+        max-height: 400px;
+        overflow-y: auto;
+      }
+      .name {
+        padding: 5px;
+        font-size: 18px;
+      }
+      .highlight {
+        background-color: yellow;
+      }
+      .stats {
+        margin-top: 20px;
+        font-size: 14px;
+        color: #333;
+      }
+      #backToTop {
+        display: none;
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        padding: 10px 15px;
+        font-size: 16px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      #loader {
+        margin-top: 10px;
+        color: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Search Dashboard</h1>
+    <input type="text" id="searchBox" placeholder="Search names..." />
+    <div id="loader"></div>
+
+    <div class="stats">
+      Keystrokes: <span id="keystrokeCount">0</span> | Searches Triggered:
+      <span id="debounceCount">0</span>
+    </div>
+
+    <div class="results" id="resultsContainer"></div>
+
+    <button id="backToTop">↑ Back to Top</button>
+
+    <script>
+      // Generate 200+ random names
+      const names = [];
+      const baseNames = [
+        "Alice",
+        "Bob",
+        "Charlie",
+        "David",
+        "Eve",
+        "Fiona",
+        "George",
+        "Hannah",
+        "Ian",
+        "Jack",
+      ];
+      for (let i = 0; i < 250; i++) {
+        const name =
+          baseNames[Math.floor(Math.random() * baseNames.length)] +
+          " " +
+          (i + 1);
+        names.push(name);
+      }
+
+      const searchBox = document.getElementById("searchBox");
+      const resultsContainer = document.getElementById("resultsContainer");
+      const keystrokeCounter = document.getElementById("keystrokeCount");
+      const debounceCounter = document.getElementById("debounceCount");
+      const backToTopButton = document.getElementById("backToTop");
+      const loader = document.getElementById("loader");
+
+      let keystrokes = 0;
+      let debounceCount = 0;
+
+      function highlightMatch(name, keyword) {
+        const re = new RegExp(`(${keyword})`, "gi");
+        return name.replace(re, '<span class="highlight">$1</span>');
+      }
+
+      function renderResults(matches, keyword) {
+        if (matches.length === 0) {
+          resultsContainer.innerHTML = `<p>No results found</p>`;
+          return;
+        }
+        resultsContainer.innerHTML = matches
+          .map(
+            (name) => `<div class="name">${highlightMatch(name, keyword)}</div>`
+          )
+          .join("");
+      }
+
+      function debounce(func, delay) {
+        let timeout;
+        return function (...args) {
+          clearTimeout(timeout);
+          loader.innerText = "Searching...";
+          timeout = setTimeout(() => {
+            loader.innerText = "";
+            func.apply(this, args);
+          }, delay);
+        };
+      }
+
+      function throttle(func, limit) {
+        let lastCall = 0;
+        return function (...args) {
+          const now = Date.now();
+          if (now - lastCall >= limit) {
+            lastCall = now;
+            func.apply(this, args);
+          }
+        };
+      }
+
+      const handleSearch = debounce(() => {
+        debounceCount++;
+        debounceCounter.innerText = debounceCount;
+
+        const query = searchBox.value.toLowerCase().trim();
+        if (query === "") {
+          resultsContainer.innerHTML = "";
+          return;
+        }
+
+        const matches = names.filter((name) =>
+          name.toLowerCase().includes(query)
+        );
+        renderResults(matches, query);
+      }, 1000);
+
+      searchBox.addEventListener("input", () => {
+        keystrokes++;
+        keystrokeCounter.innerText = keystrokes;
+        handleSearch();
+      });
+
+      // Throttle scroll handler
+      window.addEventListener(
+        "scroll",
+        throttle(() => {
+          if (window.scrollY > 200) {
+            backToTopButton.style.display = "block";
+          } else {
+            backToTopButton.style.display = "none";
+          }
+        }, 500)
+      );
+
+      backToTopButton.addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    </script>
+  </body>
+</html>
