@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    body {
+      margin: 0px;
+    }
+    .card {
+      /* background-color: azure; */
+      width: "100px";
+      height: "100px";
+      align-items: center;
+      /* border: "1px"; */
+      border-width: 1px;
+      border-style: solid;
+      background-color: beige;
+    }
+  </style>
+  <body>
+    <div
+      id="header"
+      style="
+        width: 100%;
+        height: 30px;
+        background-color: black;
+        align-content: center;
+      "
+    >
+      <input placeholder="search here" id="search" style="margin-left: 400px" />
+      <label style="color: white">STATUS</label>
+      <select id="status">
+        <option value="dead">DEAD</option>
+        <option value="alive">ALIVE</option>
+      </select>
+      <label style="color: white">SPECIES</label>
+      <select id="SPECIES">
+        <option value="human">HUMAN</option>
+        <option value="alien">ALIEN</option>
+      </select>
+    </div>
+    <div
+      id="displayData"
+      style="
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        width: 1000px;
+        height: 500px;
+        border-style: solid;
+        border-color: black;
+        border-width: 1px;
+      "
+    ></div>
+    <button style="width: fit-content" id="prev">PREV</button>
+    <button id="next">NEXT</button>
+  </body>
+</html>
+<script>
+  let status = document.getElementById("status").value;
+  let SPECIES = document.getElementById("SPECIES").value;
+  //   status.addEventListener("change", fetRes(status));
+  //   SPECIES.addEventListener("change", fetRes(SPECIES));
+  let allData = [];
+  let limit = 8;
+  let curr = 0;
+  let searchInput = document.getElementById("search");
+  let timer;
+  searchInput.addEventListener("input", (e) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      fetRes(e.target.value);
+    }, 100);
+  });
+  async function fetRes(query) {
+    let data = await fetch("https://rickandmortyapi.com/api/character");
+    let res = await data.json();
+    res = res.results;
+    let searchResult = res.filter((ele) => {
+      return ele.name.toLowerCase().includes(query.toLowerCase());
+      // ele.status.toLowerCase() === status.toLocaleLowerCase()
+    });
+    console.log(searchResult);
+    if (searchResult) {
+      display(searchResult);
+    }
+  }
+  async function fetchData() {
+    try {
+      let data = await fetch("https://rickandmortyapi.com/api/character");
+      let res = await data.json();
+      allData = res.results;
+      allData = allData.slice(curr, curr + limit);
+
+      display(allData);
+      console.log(allData);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  let prevBtn = document.getElementById("prev");
+  prevBtn.addEventListener("click", prev);
+  let next = document.getElementById("next");
+  next.addEventListener("click", Next);
+  function Next() {
+    curr = curr + limit;
+    fetchData();
+  }
+  function prev() {
+    curr = curr - limit;
+    fetchData();
+  }
+  let displayData = document.getElementById("displayData");
+  function display(data) {
+    displayData.innerHTML = "";
+    data.forEach((ele) => {
+      let card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `<img  style="width:200px; height:200px" src=${ele.image}><div><span>NAME:${ele.name}</span>||<span>STATUS:${ele.status}</span></div>`;
+      displayData.appendChild(card);
+    });
+  }
+  fetchData();
+</script>
