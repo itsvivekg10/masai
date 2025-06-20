@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="para"></div>
+    <button id="btn">para</button>
+  </body>
+</html>
+<script>
+  let para = document.getElementById("para");
+  let btn = document.getElementById("btn");
+  para.innerHTML = "";
+  btn.addEventListener("click", () => {
+    para.innerHTML = `<p>this is new para</p>`;
+  });
+</script>
