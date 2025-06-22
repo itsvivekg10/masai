@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React Card</title>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/@babel/standalone/babel.min.js"
+    ></script>
+  </head>
+  <body>
+    <div id="root">this is root element</div>
+
+    <script type="text/babel">
+      function Card(props) {
+        return (
+          <>
+            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+              {" "}
+              <h1>{props.title}</h1>
+              <p>{props.para}</p>
+              <h3>{props.price}</h3>
+              <button style={props.style}>getStarted</button>
+            </div>
+          </>
+        );
+      }
+
+      function App() {
+        return (
+          <>
+            <Card title="start" para="lorem1sdnfjd" price="free" />
+            <Card
+              title="lorem1"
+              para="lorem1sdnfjd"
+              price="2$"
+              style={{ backgroundColor: "lightblue", padding: "10px" }}
+            />
+            <Card title="lorem2" para="lorem1sdnfjd" price="10$" />
+          </>
+        );
+      }
+
+      const rootElement = document.getElementById("root");
+      const root = ReactDOM.createRoot(rootElement);
+      root.render(<App />);
+    </script>
+  </body>
+</html>

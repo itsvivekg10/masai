@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React Card</title>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/@babel/standalone/babel.min.js"
+    ></script>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const blogs = [
+        {
+          title: "Mastering JavaScript",
+          content: "JavaScript is a powerful language for web development.",
+        },
+        {
+          title: "React in Indian Startups",
+          content: "React is widely used in many Indian tech companies.",
+        },
+        {
+          title: "Career in Web Development",
+          content: "Explore job roles and growth in web development.",
+        },
+      ];
+
+      function Card({ title, content, onClick, active }) {
+        return (
+          <div
+            style={{
+              border: "1px solid #ccc",
+              padding: "15px",
+              marginBottom: "10px",
+              borderRadius: "8px",
+              backgroundColor: "#f9f9f9",
+            }}
+          >
+            <button onClick={onClick}>{title}</button>
+            {active && <p>{content}</p>}
+          </div>
+        );
+      }
+
+      function App() {
+        const [active, setActive] = React.useState(null);
+
+        return (
+          <div>
+            <h1>Blog List</h1>
+            {blogs.map((ele, index) => (
+              <Card
+                key={index}
+                title={ele.title}
+                content={ele.content}
+                active={active === index}
+                onClick={() => {
+                  setActive(index);
+                }}
+              />
+            ))}
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<App />);
+    </script>
+  </body>
+</html>

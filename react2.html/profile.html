@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>React via CDN</title>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/babel-standalone@6/babel.min.js"
+    ></script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useState } = React;
+
+      const App = () => {
+        const [name, setName] = useState("");
+        const [email, setEmail] = useState("");
+        const [age, setAge] = useState("");
+        const [users, setUsers] = useState([]);
+
+        const handleSubmit = (e) => {
+          e.preventDefault();
+
+          // Input validation
+          if (!name || !email || !age) {
+            alert("Please fill all fields.");
+            return;
+          }
+
+          const newUser = {
+            id: Date.now(),
+            name,
+            email,
+            age: Number(age),
+          };
+
+          setUsers([...users, newUser]);
+
+          // Clear form
+          setName("");
+          setEmail("");
+          setAge("");
+        };
+
+        return (
+          <div>
+            <h2>User Form</h2>
+            <form onSubmit={handleSubmit}>
+              <input
+                placeholder="Enter Your Name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <input
+                placeholder="Enter Your Email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <input
+                placeholder="Enter Your Age"
+                type="number"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+              />
+              <button type="submit">Add User</button>
+            </form>
+
+            <h3>User List</h3>
+            <ul>
+              {users.map((user) => (
+                <li key={user.id}>
+                  <strong>{user.name}</strong> ({user.email}) - Age: {user.age}
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      };
+
+      const root = document.getElementById("root");
+      ReactDOM.render(<App />, root);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Product Card with Validation</title>
+    <script
+      src="https://unpkg.com/react@18/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 20px;
+      }
+      .card {
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 16px;
+        width: 250px;
+        margin: 10px;
+        position: relative;
+      }
+      .image {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 6px;
+      }
+      .discount-badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: red;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 5px;
+        font-size: 12px;
+      }
+      .product-list {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .error {
+        color: red;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useState } = React;
+
+      function ProductCard({ name, price, image, discount }) {
+        return (
+          <div className="card">
+            {discount > 0 && <div className="discount-badge">-{discount}%</div>}
+            <img src={image} alt={name} className="image" />
+            <h3>{name}</h3>
+            <p>Price: ₹{price}</p>
+          </div>
+        );
+      }
+
+      function App() {
+        const [products, setProducts] = useState([]);
+        const [form, setForm] = useState({
+          name: "",
+          price: "",
+          image: "",
+          discount: "",
+        });
+        const [errors, setErrors] = useState({});
+
+        const validate = () => {
+          const newErrors = {};
+          if (!form.name.trim()) {
+            newErrors.name = "Name is required.";
+          }
+          if (!form.price || isNaN(form.price) || Number(form.price) <= 0) {
+            newErrors.price = "Price must be a positive number.";
+          }
+          if (!form.image || !form.image.startsWith("http")) {
+            newErrors.image = "Image must be a valid URL.";
+          }
+          if (
+            form.discount &&
+            (isNaN(form.discount) ||
+              Number(form.discount) < 0 ||
+              Number(form.discount) > 100)
+          ) {
+            newErrors.discount = "Discount must be between 0 and 100.";
+          }
+          return newErrors;
+        };
+
+        const handleChange = (e) => {
+          setForm({ ...form, [e.target.name]: e.target.value });
+        };
+
+        const handleSubmit = (e) => {
+          e.preventDefault();
+          const validationErrors = validate();
+          setErrors(validationErrors);
+
+          if (Object.keys(validationErrors).length === 0) {
+            const newProduct = {
+              ...form,
+              price: Number(form.price),
+              discount: Number(form.discount || 0),
+            };
+            setProducts([...products, newProduct]);
+            setForm({ name: "", price: "", image: "", discount: "" });
+          }
+        };
+
+        return (
+          <div>
+            <h2>Add Product</h2>
+            <form onSubmit={handleSubmit}>
+              <div>
+                <input
+                  name="name"
+                  placeholder="Product Name"
+                  value={form.name}
+                  onChange={handleChange}
+                />
+                {errors.name && <div className="error">{errors.name}</div>}
+              </div>
+              <div>
+                <input
+                  name="price"
+                  placeholder="Price"
+                  value={form.price}
+                  onChange={handleChange}
+                />
+                {errors.price && <div className="error">{errors.price}</div>}
+              </div>
+              <div>
+                <input
+                  name="image"
+                  placeholder="Image URL"
+                  value={form.image}
+                  onChange={handleChange}
+                />
+                {errors.image && <div className="error">{errors.image}</div>}
+              </div>
+              <div>
+                <input
+                  name="discount"
+                  placeholder="Discount (%)"
+                  value={form.discount}
+                  onChange={handleChange}
+                />
+                {errors.discount && (
+                  <div className="error">{errors.discount}</div>
+                )}
+              </div>
+              <button type="submit">Add Product</button>
+            </form>
+
+            <h2>Product List</h2>
+            <div className="product-list">
+              {products.map((prod, index) => (
+                <ProductCard key={index} {...prod} />
+              ))}
+            </div>
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<App />);
+    </script>
+  </body>
+</html>
