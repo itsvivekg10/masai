@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Attendance Manager</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    li {
+      margin: 10px 0;
+    }
+    .present {
+      color: green;
+    }
+    .absent {
+      color: red;
+    }
+    button {
+      margin-left: 10px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+    select {
+      margin-left: 10px;
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <!-- React and ReactDOM CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <!-- Babel for JSX -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Your React App -->
+  <script type="text/babel">
+    const { useState } = React;
+
+    function AttendanceManager() {
+      const [students, setStudents] = useState([
+        { id: 1, name: "Alice", present: true },
+        { id: 2, name: "Bob", present: false },
+        { id: 3, name: "Charlie", present: true },
+        { id: 4, name: "Diana", present: false },
+        { id: 5, name: "Ethan", present: true },
+      ]);
+
+      const [filter, setFilter] = useState("All");
+
+      const toggleAttendance = (id) => {
+        setStudents((prev) =>
+          prev.map((student) =>
+            student.id === id
+              ? { ...student, present: !student.present }
+              : student
+          )
+        );
+      };
+
+      const handleFilterChange = (e) => {
+        setFilter(e.target.value);
+      };
+
+      const filteredStudents = students.filter((student) => {
+        if (filter === "Present") return student.present;
+        if (filter === "Absent") return !student.present;
+        return true;
+      });
+
+      const presentCount = students.filter((s) => s.present).length;
+
+      return (
+        <div>
+          <h1>Attendance Manager</h1>
+
+          <label>
+            Filter:
+            <select value={filter} onChange={handleFilterChange}>
+              <option value="All">All</option>
+              <option value="Present">Present</option>
+              <option value="Absent">Absent</option>
+            </select>
+          </label>
+
+          <ul>
+            {filteredStudents.map((student) => (
+              <li
+                key={student.id}
+                className={student.present ? "present" : "absent"}
+              >
+                {student.name} - {student.present ? "Present" : "Absent"}
+                <button onClick={() => toggleAttendance(student.id)}>Toggle</button>
+              </li>
+            ))}
+          </ul>
+
+          <h3>Total Present: {presentCount}</h3>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<AttendanceManager />);
+  </script>
+</body>
+</html>
