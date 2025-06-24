@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Basic Todo List App</title>
+    <style>
+      body {
+        max-width: 500px;
+        margin: 50px auto;
+        padding: 20px;
+      }
+      ul {
+        padding-left: 20px;
+      }
+      li {
+        margin: 8px 0;
+      }
+      input {
+        padding: 5px;
+        margin-right: 8px;
+        width: 70%;
+      }
+      button {
+        padding: 5px 10px;
+        margin-top: 10px;
+        margin-right: 5px;
+        cursor: pointer;
+      }
+      .empty-message {
+        color: gray;
+        font-style: italic;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Todo List</h1>
+    <div id="root"></div>
+
+    <script
+      src="https://unpkg.com/react@18/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+      const { useState } = React;
+
+      function TodoApp() {
+        const [tasks, setTasks] = useState(["Buy milk", "Study React"]);
+        const [newTask, setNewTask] = useState("");
+
+        const addTask = () => {
+          const trimmed = newTask.trim();
+          if (trimmed) {
+            setTasks([...tasks, trimmed]);
+            setNewTask("");
+          }
+        };
+
+        const clearTasks = () => {
+          setTasks([]);
+        };
+
+        return (
+          <div>
+            <div>
+              <input
+                type="text"
+                value={newTask}
+                placeholder="Enter new task"
+                onChange={(e) => setNewTask(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && addTask()}
+              />
+              <button onClick={addTask}>Add</button>
+              <button onClick={clearTasks}>Clear All</button>
+            </div>
+
+            {tasks.length === 0 ? (
+              <p className="empty-message">No tasks available.</p>
+            ) : (
+              <ul>
+                {tasks.map((task, index) => (
+                  <li key={index}>{task}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<TodoApp />);
+    </script>
+  </body>
+</html>
