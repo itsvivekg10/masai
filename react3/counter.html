@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      src="https://unpkg.com/react@18/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+<script type="text/babel">
+  function App() {
+    const [state, setState] = React.useState(0);
+    const [message, setMessage] = React.useState("");
+
+    function counter() {
+      if (state < 10) {
+        setState(state + 1);
+        setMessage(""); // Clear message
+      } else {
+        setMessage("Count is complete");
+      }
+      console.log(state);
+    }
+
+    function decrement() {
+      if (state > 0) {
+        setState(state - 1);
+        setMessage(""); // Clear message
+      }
+    }
+
+    return (
+      <>
+        <h1>{state}</h1>
+        <p style={{ color: "green" }}>{message}</p>
+        <button onClick={counter}>Counter</button>
+        <button onClick={decrement}>Dec</button>
+      </>
+    );
+  }
+
+  let rootElement = document.getElementById("root");
+  let root = ReactDOM.createRoot(rootElement);
+  root.render(<App />);
+</script>

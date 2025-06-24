@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>React To-Do List</title>
+    <style>
+      .completed {
+        text-decoration: line-through;
+        color: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script
+      src="https://unpkg.com/react@18/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+      function ToDoApp() {
+        const [tasks, setTasks] = React.useState([]);
+        const [input, setInput] = React.useState("");
+
+        const addTask = () => {
+          const trimmedInput = input.trim();
+          if (trimmedInput === "") return;
+
+          const newTask = {
+            id: Date.now(),
+            text: trimmedInput,
+            completed: false,
+          };
+
+          setTasks([...tasks, newTask]);
+          setInput("");
+        };
+
+        const toggleComplete = (id) => {
+          setTasks(
+            tasks.map((task) =>
+              task.id === id ? { ...task, completed: !task.completed } : task
+            )
+          );
+        };
+
+        const deleteTask = (id) => {
+          setTasks(tasks.filter((task) => task.id !== id));
+        };
+
+        return (
+          <div>
+            <h2>To-Do List</h2>
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Enter a task"
+            />
+            <button onClick={addTask}>Add Task</button>
+
+            <ul>
+              {tasks.map((task) => (
+                <li key={task.id}>
+                  <span
+                    className={task.completed ? "completed" : ""}
+                    onClick={() => toggleComplete(task.id)}
+                    style={{ cursor: "pointer", marginRight: "10px" }}
+                  >
+                    {task.text}
+                  </span>
+                  <button onClick={() => deleteTask(task.id)}>Delete</button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<ToDoApp />);
+    </script>
+  </body>
+</html>
