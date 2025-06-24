@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Fetch Products with React CDN</title>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/babel-standalone@6/babel.min.js"
+    ></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 2rem;
+      }
+      button {
+        padding: 0.5rem 1rem;
+        font-size: 16px;
+      }
+      .error {
+        color: red;
+        margin-top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useState } = React;
+
+      function App() {
+        const [loading, setLoading] = useState(false);
+        const [error, setError] = useState(null);
+
+        const fetchProducts = async () => {
+          setLoading(true);
+          setError(null);
+          try {
+            const res = await fetch("https://fakestoreapi.com/products");
+            if (!res.ok) {
+              throw new Error("Network response was not ok");
+            }
+            const data = await res.json();
+            console.log("Fetched Products:", data);
+          } catch (err) {
+            console.error("Fetch error:", err);
+            setError("Failed to fetch products. Please try again.");
+          } finally {
+            setLoading(false);
+          }
+        };
+
+        return (
+          <div>
+            <h1>Product Fetcher</h1>
+            <button onClick={fetchProducts} disabled={loading}>
+              {loading ? "Loading..." : "Fetch Products"}
+            </button>
+            {error && <div className="error">{error}</div>}
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<App />);
+    </script>
+  </body>
+</html>
