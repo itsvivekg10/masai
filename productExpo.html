@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>React Product Store</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 20px;
+      }
+      .product-card {
+        border: 1px solid #ccc;
+        margin: 10px;
+        padding: 10px;
+        width: 200px;
+      }
+      .grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      select {
+        margin: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <!-- React CDN -->
+    <script
+      src="https://unpkg.com/react@18/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-router-dom@6/umd/react-router-dom.development.js"
+      crossorigin
+    ></script>
+
+    <script type="text/babel">
+      const { useState, useEffect } = React;
+      const { BrowserRouter, Routes, Route, Link, useParams, useNavigate } =
+        ReactRouterDOM;
+
+      function App() {
+        return (
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<ProductList />} />
+              <Route path="/product/:id" element={<ProductDetail />} />
+            </Routes>
+          </BrowserRouter>
+        );
+      }
+
+      function ProductList() {
+        const [products, setProducts] = useState([]);
+        const [filtered, setFiltered] = useState([]);
+        const [categories, setCategories] = useState([]);
+        const [category, setCategory] = useState("all");
+        const [sort, setSort] = useState("");
+
+        useEffect(() => {
+          fetch("https://dummyjson.com/products")
+            .then((res) => res.json())
+            .then((data) => {
+              setProducts(data.products);
+              setFiltered(data.products);
+              const uniqueCats = Array.from(
+                new Set(data.products.map((p) => p.category))
+              );
+              setCategories(uniqueCats);
+            });
+        }, []);
+
+        useEffect(() => {
+          let data = [...products];
+
+          if (category !== "all") {
+            data = data.filter((p) => p.category === category);
+          }
+
+          if (sort === "low") {
+            data.sort((a, b) => a.price - b.price);
+          } else if (sort === "high") {
+            data.sort((a, b) => b.price - a.price);
+          }
+
+          setFiltered(data);
+        }, [category, sort, products]);
+
+        return (
+          <div>
+            <h1>Product Store</h1>
+            <label>
+              Filter by Category:
+              <select onChange={(e) => setCategory(e.target.value)}>
+                <option value="all">All</option>
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label>
+              Sort by Price:
+              <select onChange={(e) => setSort(e.target.value)}>
+                <option value="">None</option>
+                <option value="low">Low to High</option>
+                <option value="high">High to Low</option>
+              </select>
+            </label>
+
+            <div className="grid">
+              {filtered.map((product) => (
+                <div className="product-card" key={product.id}>
+                  <img
+                    src={product.thumbnail}
+                    alt={product.title}
+                    width="100%"
+                  />
+                  <h4>{product.title}</h4>
+                  <p>${product.price}</p>
+                  <Link to={`/product/${product.id}`}>View Details</Link>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      }
+
+      function ProductDetail() {
+        const { id } = useParams();
+        const [product, setProduct] = useState(null);
+        const navigate = useNavigate();
+
+        useEffect(() => {
+          fetch(`https://dummyjson.com/products/${id}`)
+            .then((res) => res.json())
+            .then((data) => setProduct(data));
+        }, [id]);
+
+        if (!product) return <p>Loading...</p>;
+
+        return (
+          <div>
+            <button onClick={() => navigate(-1)}>⬅️ Go Back</button>
+            <h2>{product.title}</h2>
+            <img src={product.thumbnail} alt={product.title} width="300" />
+            <p>
+              <b>Price:</b> ${product.price}
+            </p>
+            <p>
+              <b>Category:</b> {product.category}
+            </p>
+            <p>{product.description}</p>
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<App />);
+    </script>
+  </body>
+</html>
