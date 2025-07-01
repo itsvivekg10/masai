@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog App Assignment</title>
+
+    <!-- React and ReactDOM -->
+    <script
+      src="https://unpkg.com/react@18/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+
+    <!-- React Router DOM -->
+    <script
+      src="https://unpkg.com/react-router-dom@6/umd/react-router-dom.development.js"
+      crossorigin
+    ></script>
+
+    <!-- Babel for JSX support -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      nav a {
+        margin-right: 15px;
+        text-decoration: none;
+        color: #007acc;
+      }
+      input {
+        margin: 10px 0;
+        padding: 5px;
+        width: 250px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { BrowserRouter, Routes, Route, Link, useParams } = ReactRouterDOM;
+      function Navbar() {
+        return (
+          <nav>
+            <Link to="/">Home</Link>
+            <Link to="/about">About</Link>
+          </nav>
+        );
+      }
+      function PostList() {
+        const [posts, setPosts] = React.useState([]);
+        const [search, setSearch] = React.useState("");
+
+        React.useEffect(() => {
+          fetch("https://dummyjson.com/posts")
+            .then((res) => res.json())
+            .then((data) => setPosts(data.posts));
+        }, []);
+
+        const filteredPosts = posts.filter((post) =>
+          post.title.toLowerCase().includes(search.toLowerCase())
+        );
+
+        return (
+          <div>
+            <h2>Blog Posts</h2>
+            <input
+              type="text"
+              placeholder="Search by title..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <ul>
+              {filteredPosts.map((post) => (
+                <li key={post.id}>
+                  <Link to={`/post/${post.id}`}>{post.title}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      }
+      function PostDetails() {
+        const { id } = useParams();
+        const [post, setPost] = React.useState(null);
+
+        React.useEffect(() => {
+          fetch(`https://dummyjson.com/posts/${id}`)
+            .then((res) => res.json())
+            .then((data) => setPost(data));
+        }, [id]);
+
+        if (!post) return <p>Loading...</p>;
+
+        return (
+          <div>
+            <h2>{post.title}</h2>
+            <p>{post.body}</p>
+            <h4>Tags:</h4>
+            <ul>
+              {post.tags.map((tag, index) => (
+                <li key={index}>{tag}</li>
+              ))}
+            </ul>
+          </div>
+        );
+      }
+      function About() {
+        return (
+          <div>
+            <h2>About This App</h2>
+            <p>
+              This blog app is built by Vivek Gupta using React and React Router
+              DOM. It allows you to view and search blog posts and see post
+              details.
+            </p>
+          </div>
+        );
+      }
+      function App() {
+        return (
+          <BrowserRouter>
+            <Navbar />
+            <Routes>
+              <Route path="/" element={<PostList />} />
+              <Route path="/post/:id" element={<PostDetails />} />
+              <Route path="/about" element={<About />} />
+            </Routes>
+          </BrowserRouter>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<App />);
+    </script>
+  </body>
+</html>
