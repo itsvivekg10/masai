@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>
+      console.log("hello world");
+      //   function manipulate(response) {
+      //     let res = response.filter((ele) => ele.price > 100);
+      //     console.log(res);
+      //   }
+      //   async function getData() {
+      //     try {
+      //       let url = "https://fakestoreapi.com/products";
+      //       let data = await fetch(url);
+      //       let response = await data.json();
+      //       manipulate(response);
+      //     } catch (error) {
+      //       console.log(error);
+      //     }
+      //   }
+      //   getData();
+      new Promise((res, rej) => {
+        let v = true;
+        if (v) {
+          res("resolved");
+        } else {
+          rej("reject");
+        }
+      })
+        .then((res) => console.log(res))
+        .catch((rej) => console.log(rej))
+        .finally(console.log("jkfnsdjk"));
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>hello world</h1>
+  </body>
+</html>

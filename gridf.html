@@ -14,11 +14,11 @@
       }
       #box > div#left {
         width: 500px;
-        background-color: #f9431e;
+        background-color: a786bd;
         height: 500px;
         margin-left: 20px;
         display: grid;
-
+        gap: 20px;
         grid-template-rows: repeat(2, 50%);
       }
       #box > div#left > div {
@@ -36,11 +36,20 @@
     <div id="box">
       <div id="left">
         <div style="background-color: #f9431e"></div>
-        <div style="background-color: #a03d2d; display: grid; display: flex">
+        <div
+          style="
+            background-color: #a786bd;
+            display: grid;
+            display: flex;
+            gap: 10px;
+          "
+        >
           <div
             style="border: 2px solid; width: 50%; background-color: #010dff"
           ></div>
-          <div style="border: 2px solid; width: 50%"></div>
+          <div
+            style="border: 2px solid; width: 50%; background-color: brown"
+          ></div>
         </div>
       </div>
       <div id="right"></div>

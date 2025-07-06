@@ -100,13 +100,15 @@
       }
 
       async function deleteStudent(id) {
-        let data = await fetch(
-          `https://studentdas-3bd33-default-rtdb.asia-southeast1.firebasedatabase.app/students{id}.json`,
+        const res = await fetch(
+          `https://studentdas-3bd33-default-rtdb.asia-southeast1.firebasedatabase.app/students/${id}.json`,
           {
             method: "DELETE",
           }
         );
+
         await fetchData();
+        a;
       }
 
       function editStudent(id) {

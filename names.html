@@ -6,173 +6,366 @@
     <style>
       body {
         font-family: Arial, sans-serif;
-        padding: 40px;
-        text-align: center;
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
-      input {
-        padding: 10px;
+      #searchBox {
         width: 300px;
+        padding: 10px;
         font-size: 16px;
       }
-      .results {
+      #results {
         margin-top: 20px;
-        max-height: 400px;
+        max-height: 300px;
         overflow-y: auto;
+        width: 300px;
       }
-      .name {
-        padding: 5px;
-        font-size: 18px;
+      .name-item {
+        padding: 5px 10px;
+        border-bottom: 1px solid #ddd;
       }
       .highlight {
         background-color: yellow;
       }
-      .stats {
+      #stats {
         margin-top: 20px;
-        font-size: 14px;
-        color: #333;
+      }
+      #loader {
+        margin-top: 10px;
+        color: blue;
+      }
+      #noResults {
+        margin-top: 10px;
+        color: red;
       }
       #backToTop {
-        display: none;
         position: fixed;
         bottom: 30px;
         right: 30px;
-        padding: 10px 15px;
-        font-size: 16px;
-        background: #007bff;
+        padding: 10px 20px;
+        background-color: #007bff;
         color: white;
         border: none;
         border-radius: 5px;
         cursor: pointer;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      }
-      #loader {
-        margin-top: 10px;
-        color: gray;
+        display: none;
       }
     </style>
   </head>
   <body>
-    <h1>Search Dashboard</h1>
-    <input type="text" id="searchBox" placeholder="Search names..." />
-    <div id="loader"></div>
+    <h2>🔍 Name Search Dashboard</h2>
+    <input type="text" id="searchBox" placeholder="Type to search..." />
 
-    <div class="stats">
-      Keystrokes: <span id="keystrokeCount">0</span> | Searches Triggered:
-      <span id="debounceCount">0</span>
+    <div id="loader" style="display: none">Searching...</div>
+    <div id="noResults" style="display: none">No results found</div>
+    <div id="results"></div>
+
+    <div id="stats">
+      <p>🧮 Total Keystrokes: <span id="keystrokes">0</span></p>
+      <p>🔁 Debounced Searches: <span id="searchCount">0</span></p>
     </div>
 
-    <div class="results" id="resultsContainer"></div>
-
-    <button id="backToTop">↑ Back to Top</button>
+    <button id="backToTop">⬆️ Back to Top</button>
 
     <script>
-      // Generate 200+ random names
+      // Generate 200+ names
       const names = [];
       const baseNames = [
-        "Alice",
-        "Bob",
-        "Charlie",
-        "David",
-        "Eve",
-        "Fiona",
-        "George",
-        "Hannah",
-        "Ian",
-        "Jack",
+        "Aarav",
+        "Vivaan",
+        "Aditya",
+        "Vihaan",
+        "Arjun",
+        "Sai",
+        "Reyansh",
+        "Ayaan",
+        "Krishna",
+        "Ishaan",
+        "Shaurya",
+        "Atharv",
+        "Aryan",
+        "Dhruv",
+        "Kabir",
+        "Ritvik",
+        "Om",
+        "Yash",
+        "Devansh",
+        "Rudra",
+        "Anaya",
+        "Diya",
+        "Myra",
+        "Ira",
+        "Aarohi",
+        "Saanvi",
+        "Anika",
+        "Avni",
+        "Meera",
+        "Ishita",
+        "Aadhya",
+        "Vanya",
+        "Kiara",
+        "Navya",
+        "Tanya",
+        "Riya",
+        "Khushi",
+        "Nitya",
+        "Pihu",
+        "Shruti",
+        "Lakshmi",
+        "Gauri",
+        "Kavya",
+        "Sita",
+        "Radha",
+        "Durga",
+        "Anjali",
+        "Priya",
+        "Nandini",
+        "Sneha",
+        "Harsh",
+        "Kunal",
+        "Amit",
+        "Rohan",
+        "Nikhil",
+        "Siddharth",
+        "Rakesh",
+        "Vikram",
+        "Ajay",
+        "Anil",
+        "Manoj",
+        "Sunil",
+        "Rahul",
+        "Abhishek",
+        "Vivek",
+        "Rajesh",
+        "Ravi",
+        "Suresh",
+        "Deepak",
+        "Mahesh",
+        "Tanvi",
+        "Bhavana",
+        "Neha",
+        "Aishwarya",
+        "Shreya",
+        "Divya",
+        "Komal",
+        "Pallavi",
+        "Simran",
+        "Rachna",
+        "Arpita",
+        "Sonali",
+        "Mansi",
+        "Nikita",
+        "Poonam",
+        "Jaya",
+        "Kritika",
+        "Swati",
+        "Payal",
+        "Megha",
+        "Ashok",
+        "Prakash",
+        "Gopal",
+        "Mohan",
+        "Naresh",
+        "Dinesh",
+        "Sanjay",
+        "Ramesh",
+        "Rajiv",
+        "Vinod",
+        "Bharat",
+        "Kishore",
+        "Shankar",
+        "Harish",
+        "Yogesh",
+        "Sharad",
+        "Kiran",
+        "Tushar",
+        "Milind",
+        "Satyam",
+        "Indira",
+        "Kalpana",
+        "Savitri",
+        "Sarita",
+        "Rekha",
+        "Alka",
+        "Madhuri",
+        "Usha",
+        "Lata",
+        "Chitra",
+        "Padma",
+        "Vimla",
+        "Kamla",
+        "Pushpa",
+        "Malti",
+        "Geeta",
+        "Jyoti",
+        "Hemlata",
+        "Sarla",
+        "Sudha",
+        "Raj",
+        "Vijay",
+        "Prem",
+        "Ashwin",
+        "Tejas",
+        "Naveen",
+        "Parth",
+        "Karthik",
+        "Harshad",
+        "Rajat",
+        "Akhil",
+        "Jatin",
+        "Dev",
+        "Madhav",
+        "Varun",
+        "Harshit",
+        "Sameer",
+        "Nilesh",
+        "Uday",
+        "Bhavin",
+        "Chirag",
+        "Arvind",
+        "Hemant",
+        "Lalit",
+        "Ajeet",
+        "Deepesh",
+        "Anup",
+        "Rituraj",
+        "Manish",
+        "Yuvraj",
+        "Trisha",
+        "Ishani",
+        "Charvi",
+        "Mithila",
+        "Vedika",
+        "Sharvani",
+        "Asmita",
+        "Niharika",
+        "Anushka",
+        "Vaidehi",
+        "Lavanya",
+        "Bhoomi",
+        "Smriti",
+        "Amrita",
+        "Suhani",
+        "Vibha",
+        "Kashish",
+        "Prerna",
+        "Urvi",
+        "Gunjan",
+        "Parul",
+        "Reema",
+        "Tanushree",
+        "Shraddha",
+        "Bhakti",
+        "Archana",
+        "Mridula",
+        "Kanika",
+        "Sejal",
+        "Ragini",
+        "Devika",
+        "Pranjal",
+        "Twisha",
+        "Mahima",
+        "Yamini",
+        "Anvesha",
+        "Avantika",
+        "Nayana",
+        "Vaishnavi",
+        "Siddhi",
       ];
-      for (let i = 0; i < 250; i++) {
-        const name =
-          baseNames[Math.floor(Math.random() * baseNames.length)] +
-          " " +
-          (i + 1);
-        names.push(name);
+
+      for (let i = 0; i < 20; i++) {
+        baseNames.forEach((name) => names.push(name + i));
       }
 
       const searchBox = document.getElementById("searchBox");
-      const resultsContainer = document.getElementById("resultsContainer");
-      const keystrokeCounter = document.getElementById("keystrokeCount");
-      const debounceCounter = document.getElementById("debounceCount");
-      const backToTopButton = document.getElementById("backToTop");
+      const resultsContainer = document.getElementById("results");
       const loader = document.getElementById("loader");
+      const noResults = document.getElementById("noResults");
+      const keystrokesDisplay = document.getElementById("keystrokes");
+      const searchCountDisplay = document.getElementById("searchCount");
+      const backToTopBtn = document.getElementById("backToTop");
 
       let keystrokes = 0;
-      let debounceCount = 0;
+      let searchCount = 0;
 
-      function highlightMatch(name, keyword) {
-        const re = new RegExp(`(${keyword})`, "gi");
-        return name.replace(re, '<span class="highlight">$1</span>');
-      }
-
-      function renderResults(matches, keyword) {
-        if (matches.length === 0) {
-          resultsContainer.innerHTML = `<p>No results found</p>`;
-          return;
-        }
-        resultsContainer.innerHTML = matches
-          .map(
-            (name) => `<div class="name">${highlightMatch(name, keyword)}</div>`
-          )
-          .join("");
-      }
-
+      // Debounce function
       function debounce(func, delay) {
         let timeout;
         return function (...args) {
+          loader.style.display = "block";
           clearTimeout(timeout);
-          loader.innerText = "Searching...";
           timeout = setTimeout(() => {
-            loader.innerText = "";
+            loader.style.display = "none";
             func.apply(this, args);
           }, delay);
         };
       }
 
+      // Throttle function
       function throttle(func, limit) {
-        let lastCall = 0;
+        let inThrottle;
         return function (...args) {
-          const now = Date.now();
-          if (now - lastCall >= limit) {
-            lastCall = now;
+          if (!inThrottle) {
             func.apply(this, args);
+            inThrottle = true;
+            setTimeout(() => (inThrottle = false), limit);
           }
         };
       }
 
-      const handleSearch = debounce(() => {
-        debounceCount++;
-        debounceCounter.innerText = debounceCount;
+      // Highlight matching text
+      function highlight(text, query) {
+        const regex = new RegExp(`(${query})`, "gi");
+        return text.replace(regex, '<span class="highlight">$1</span>');
+      }
 
-        const query = searchBox.value.toLowerCase().trim();
-        if (query === "") {
-          resultsContainer.innerHTML = "";
-          return;
-        }
-
-        const matches = names.filter((name) =>
-          name.toLowerCase().includes(query)
+      function renderResults(query) {
+        resultsContainer.innerHTML = "";
+        if (!query) return;
+        const matched = names.filter((name) =>
+          name.toLowerCase().includes(query.toLowerCase())
         );
-        renderResults(matches, query);
+        if (matched.length === 0) {
+          noResults.style.display = "block";
+        } else {
+          noResults.style.display = "none";
+          matched.forEach((name) => {
+            const div = document.createElement("div");
+            div.className = "name-item";
+            div.innerHTML = highlight(name, query);
+            resultsContainer.appendChild(div);
+          });
+        }
+        searchCount++;
+        searchCountDisplay.textContent = searchCount;
+      }
+
+      const debouncedSearch = debounce(function () {
+        const query = searchBox.value.trim();
+        renderResults(query);
       }, 1000);
 
       searchBox.addEventListener("input", () => {
         keystrokes++;
-        keystrokeCounter.innerText = keystrokes;
-        handleSearch();
+        keystrokesDisplay.textContent = keystrokes;
+        debouncedSearch();
       });
 
-      // Throttle scroll handler
+      // Scroll listener for Back to Top button
       window.addEventListener(
         "scroll",
         throttle(() => {
           if (window.scrollY > 200) {
-            backToTopButton.style.display = "block";
+            backToTopBtn.style.display = "block";
           } else {
-            backToTopButton.style.display = "none";
+            backToTopBtn.style.display = "none";
           }
         }, 500)
       );
 
-      backToTopButton.addEventListener("click", () => {
+      backToTopBtn.addEventListener("click", () => {
         window.scrollTo({ top: 0, behavior: "smooth" });
       });
     </script>
