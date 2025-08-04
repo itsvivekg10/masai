@@ -1,0 +1,12 @@
+
+db.orders.find({ order_status: "shipped" });
+
+db.orders.updateOne({ order_id: 1 }, { $set: { total_amount: 70000 } });
+
+db.orders.deleteOne({ order_id: 4 });
+
+db.orders.findOne({ customer_name: "Alice Johnson" });
+
+db.orders.updateOne({ order_id: 2 }, { $set: { order_status: "delivered" } });
+
+db.orders.find({ total_amount: { $gte: 15000 } });
