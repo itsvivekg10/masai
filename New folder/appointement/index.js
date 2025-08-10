@@ -1,0 +1,15 @@
+const express = require("express")
+const connectToDb = require("./configs/mongo.configs")
+const patientRouter = require("./routes/mongo.routes")
+const doctorRouter = require("./routes/doctor.router")
+const appointmentRouter = require("./routes/appointment.route")
+const app = express()
+app.use(express.json())
+app.use("/hospitalApi",patientRouter)
+app.use("/hospitalApi",doctorRouter)
+app.use("/hospitalApi",appointmentRouter)
+
+connectToDb()
+app.listen(3000,()=>{
+    console.log("port started")
+})
