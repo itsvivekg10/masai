@@ -1,0 +1,10 @@
+const express = require("express")
+const connectTodb = require("./config/mongodbConfig")
+const userRouter = require("./routes/userRoutes")
+const app = express()
+app.use(express.json())
+connectTodb()
+app.use("/api",userRouter)
+app.listen(3000,()=>{
+    console.log("port started")
+})
