@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RBAC User Management</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+    .container { max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+    input, textarea, button { display: block; width: 100%; margin: 10px 0; padding: 10px; }
+    button { background: #0088cc; color: #fff; border: none; cursor: pointer; }
+    nav a { margin-right: 10px; text-decoration: none; color: #0088cc; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>User Management System</h1>
+    <nav id="nav" class="hidden">
+      <a href="#dashboard" onclick="showPage('dashboard')">Dashboard</a>
+      <a href="#profile" onclick="showPage('profile')">Profile</a>
+      <a href="#resources" onclick="showPage('resources')">Resources</a>
+      <a href="#admin" id="adminLink" onclick="showPage('admin')" class="hidden">Admin</a>
+      <button onclick="logout()">Logout</button>
+    </nav>
+
+    <div id="loginPage">
+      <h2>Login</h2>
+      <input type="email" id="loginEmail" placeholder="Email" />
+      <input type="password" id="loginPassword" placeholder="Password" />
+      <button onclick="login()">Login</button>
+      <p>Don’t have an account? <a href="#register" onclick="showPage('register')">Register</a></p>
+      <p id="loginMessage"></p>
+    </div>
+
+    <div id="registerPage" class="hidden">
+      <h2>Register</h2>
+      <input type="text" id="regUserName" placeholder="Username" />
+      <input type="email" id="regEmail" placeholder="Email" />
+      <input type="password" id="regPassword" placeholder="Password" />
+      <button onclick="register()">Register</button>
+      <p id="registerMessage"></p>
+    </div>
+
+    <div id="dashboardPage" class="hidden">
+      <h2>Dashboard</h2>
+      <p id="welcome"></p>
+    </div>
+
+    <div id="profilePage" class="hidden">
+      <h2>Profile</h2>
+      <pre id="profileData"></pre>
+    </div>
+
+    <div id="resourcesPage" class="hidden">
+      <h2>Resources</h2>
+      <input type="text" id="resTitle" placeholder="Title" />
+      <textarea id="resBody" placeholder="Body"></textarea>
+      <button onclick="createResource()">Add Resource</button>
+      <ul id="resourcesList"></ul>
+    </div>
+
+    <div id="adminPage" class="hidden">
+      <h2>All Users (Admin)</h2>
+      <ul id="usersList"></ul>
+    </div>
+  </div>
+
+  <script>
+    const API = "http://localhost:8080";
+    let token = localStorage.getItem("token");
+    let currentUser = JSON.parse(localStorage.getItem("user"));
+
+    function showPage(page) {
+      document.querySelectorAll(".container > div").forEach(div => div.classList.add("hidden"));
+      document.getElementById(page + "Page").classList.remove("hidden");
+    }
+
+    function saveAuth(data) {
+      token = data.token;
+      currentUser = data.user;
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(currentUser));
+      document.getElementById("nav").classList.remove("hidden");
+      if (currentUser.role === "admin") document.getElementById("adminLink").classList.remove("hidden");
+      showPage("dashboard");
+      document.getElementById("welcome").innerText = `Welcome ${currentUser.userName} (Role: ${currentUser.role})`;
+    }
+
+    async function login() {
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+      try {
+        const res = await fetch(`${API}/login`, {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (res.ok) saveAuth(data);
+        else document.getElementById("loginMessage").innerText = data.message;
+      } catch (err) { console.error(err); }
+    }
+
+    async function register() {
+      const userName = document.getElementById("regUserName").value;
+      const email = document.getElementById("regEmail").value;
+      const password = document.getElementById("regPassword").value;
+      try {
+        const res = await fetch(`${API}/register`, {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userName, email, password })
+        });
+        const data = await res.json();
+        document.getElementById("registerMessage").innerText = res.ok ? "Registered successfully!" : data.message;
+      } catch (err) { console.error(err); }
+    }
+
+    async function loadProfile() {
+      const res = await fetch(`${API}/profile`, { headers: { Authorization: `Bearer ${token}` } });
+      const data = await res.json();
+      document.getElementById("profileData").innerText = JSON.stringify(data, null, 2);
+    }
+
+    async function loadResources() {
+      const res = await fetch(`${API}/resources`, { headers: { Authorization: `Bearer ${token}` } });
+      const data = await res.json();
+      const list = document.getElementById("resourcesList");
+      list.innerHTML = data.map(r => `<li><b>${r.title}</b>: ${r.body}</li>`).join("");
+    }
+
+    async function createResource() {
+      const title = document.getElementById("resTitle").value;
+      const body = document.getElementById("resBody").value;
+      await fetch(`${API}/resources`, {
+        method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ title, body })
+      });
+      loadResources();
+    }
+
+    async function loadUsers() {
+      const res = await fetch(`${API}/users`, { headers: { Authorization: `Bearer ${token}` } });
+      const data = await res.json();
+      const list = document.getElementById("usersList");
+      list.innerHTML = data.map(u => `<li>${u.userName} - ${u.email} (${u.role})</li>`).join("");
+    }
+
+    function logout() {
+      localStorage.clear();
+      token = null;
+      currentUser = null;
+      document.getElementById("nav").classList.add("hidden");
+      showPage("login");
+    }
+
+    // Auto-login if token exists
+    if (token && currentUser) {
+      document.getElementById("nav").classList.remove("hidden");
+      if (currentUser.role === "admin") document.getElementById("adminLink").classList.remove("hidden");
+      showPage("dashboard");
+      document.getElementById("welcome").innerText = `Welcome ${currentUser.userName} (Role: ${currentUser.role})`;
+    }
+  </script>
+</body>
+</html>
