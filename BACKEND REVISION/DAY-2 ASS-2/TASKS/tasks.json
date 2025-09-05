@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "title": "Fix navbar",
+    "description": "Resolve mobile responsiveness issue",
+    "tag": "frontend",
+    "priority": "high",
+    "status": "open"
+  },
+  {
+    "id": 2,
+    "title": "API Integration",
+    "description": "Integrate payment API",
+    "tag": "backend",
+    "priority": "medium",
+    "status": "in-progress"
+  }
+]
