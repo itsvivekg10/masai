@@ -1,0 +1,12 @@
+const express = require("express")
+const connectToDb = require("./configs/mongoose.configs")
+const userRouter = require("./routes/userRoutes")
+const bookRouter = require("./routes/bookRoutes")
+const app = express()
+app.use(express.json())
+app.use("/user",userRouter)
+app.use("/book",bookRouter)
+connectToDb()
+app.listen(3000,()=>{
+console.log("server Started")
+})
