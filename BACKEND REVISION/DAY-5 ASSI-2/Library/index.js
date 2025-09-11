@@ -1,0 +1,12 @@
+const express = require("express")
+const conectToDb = require("./configs/mongoose.config")
+const userRouter = require("./routes/userRoutes")
+const bookRouter = require("./routes/bookRoutes")
+const app = express()
+app.use(express.json())
+app.use("/api",userRouter)
+app.use("/books",bookRouter)
+conectToDb()
+app.listen("3000",()=>{
+    console.log("serversTarted")
+})
