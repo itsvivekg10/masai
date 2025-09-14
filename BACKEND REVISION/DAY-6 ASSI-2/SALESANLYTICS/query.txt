@@ -1,0 +1,32 @@
+db.sales.aggregate([
+  { $group: { _id: "$category", totalSales: { $sum: "$amount" } } }
+])
+ db.sales.aggregate([
+  {
+    $group: {
+      _id: { $substr: ["$date", 0, 7] }, // extracts YYYY-MM
+      totalSales: { $sum: "$amount" }
+    }
+  },
+  { $sort: { _id: 1 } }
+])
+db.sales.aggregate([
+  { $group: { _id: "$product", revenue: { $sum: "$amount" } } },
+  { $sort: { revenue: -1 } },
+  { $limit: 1 }
+])
+db.sales.aggregate([
+  { $group: { _id: null, avgSaleAmount: { $avg: "$amount" } } }
+])
+db.sales.aggregate([
+  { $group: { _id: { $substr: ["$date", 0, 7] }, count: { $sum: 1 } } },
+  { $sort: { _id: 1 } }
+])
+db.sales.aggregate([
+  { $group: { _id: "$region", totalSales: { $sum: "$amount" } } }
+])
+db.sales.aggregate([
+  { $group: { _id: "$product", revenue: { $sum: "$amount" } } },
+  { $sort: { revenue: -1 } },
+  { $limit: 3 }
+])
