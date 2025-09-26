@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Real-time Group Chat</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width:900px; margin:20px auto; }
+    #app { display:flex; gap:20px; }
+    #left { width: 65%; }
+    #right { width: 35%; }
+    #messages { height: 400px; border: 1px solid #ddd; padding:10px; overflow:auto; background:#f9f9f9; }
+    .message { margin-bottom:8px; padding:6px; border-radius:6px; }
+    .system { color:#555; font-style:italic; }
+    .admin { background: #ffe6e6; }
+    .me { background: #e6ffe6; }
+  </style>
+</head>
+<body>
+  <h2>Real-time Group Chat (Assignment)</h2>
+
+  <div>
+    <label>Username: <input id="username" /></label>
+    <label><input type="checkbox" id="isAdmin" /> Is Admin</label>
+    <button id="btnRegister">Register & Join</button>
+    <button id="btnDisconnect">Disconnect</button>
+  </div>
+
+  <div id="app">
+    <div id="left">
+      <div id="messages"></div>
+
+      <div style="margin-top:10px;">
+        <input id="msgInput" style="width:75%" placeholder="Type a message" />
+        <button id="btnSend">Send</button>
+        <button id="btnAdmin" style="margin-left:8px;">Send Admin Broadcast</button>
+      </div>
+      <div style="margin-top:10px;">
+        <input id="roomInput" placeholder="room name" />
+        <button id="btnCreateRoom">Create/Join Room</button>
+      </div>
+    </div>
+
+    <div id="right">
+      <h4>Online Users</h4>
+      <ul id="onlineList"></ul>
+
+      <h4>Chat History Source</h4>
+      <div id="historySource"></div>
+    </div>
+  </div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="chat.js"></script>
+</body>
+</html>
