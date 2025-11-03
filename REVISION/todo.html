@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task List</title>
+</head>
+<body>
+  <input id="inputBox" placeholder="Enter task..." />
+  <button id="addBtn">ADD</button>
+  <div id="taskList">TASK LIST:</div>
+
+  <script>
+    const inputBox = document.getElementById("inputBox");
+    const addBtn = document.getElementById("addBtn");
+    const taskList = document.getElementById("taskList");
+
+    let tasks = [];
+
+    addBtn.addEventListener("click", () => {
+      let inputValue = inputBox.value.trim();
+      if (inputValue === "") return; 
+      tasks.push(inputValue);
+      inputBox.value = ""; 
+      console.log(tasks);
+      taskList.innerHTML = "<strong>TASK LIST:</strong><br>";
+      tasks.forEach((task, index) => {
+        const p = document.createElement("p");
+        p.textContent = `${index + 1}. ${task}`;
+        taskList.appendChild(p);
+      });
+    });
+  </script>
+</body>
+</html>
